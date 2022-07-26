@@ -1,4 +1,5 @@
 
+
 TO BUILD
 --------
 
@@ -7,4 +8,8 @@ scons build/X86/gem5.opt Ruby=true
 TO RUN
 ------
 
-./build/X86/gem5.opt -d m5out/radix1 ./configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=timing --cpu-clock=2GHz --caches --l1d_size=1kB --l1i_size=1kB --l2cache --num-l2caches=16 --l2_size=8kB --mem-type=RubyMemoryControl --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c /home/khushboo/Desktop/gem5-subodha-src11-rani/FFT > 1
+./build/X86/gem5.opt --debug-flag=Rani -d m5out/fft1 ./configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=timing --cpu-clock=2GHz --caches --l1d_size=1kB --l1i_size=1kB --l2cache --num-l2caches=16 --l2_size=8kB --mem-type=RubyMemoryControl --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c /home/khushboo/Desktop/gem5-v1.3/FFT
+
+
+./build/X86/gem5.opt --debug-flag=Rani -d m5out/fft2 ./configs/example/se_rani.py --num-cpus=16 --num-dir=16 --cpu-type=timing --cpu-clock=2GHz --caches --l1d_size=1kB --l1i_size=1kB --l2cache --num-l2caches=16 --l2_size=8kB --mem-type=RubyMemoryControl --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c "/home/khushboo/Desktop/gem5-v1.3/FFT;/home/khushboo/Desktop/gem5-v1.3/FFT"
+

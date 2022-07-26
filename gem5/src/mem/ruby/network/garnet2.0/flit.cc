@@ -34,9 +34,10 @@
 #include "mem/ruby/network/garnet2.0/flit.hh"
 
 // Constructor for the flit
-flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
+flit::flit(int global_id, int id, int  vc, int vnet, RouteInfo route, int size,
     MsgPtr msg_ptr, Cycles curTime)
 {
+    m_global_id = global_id;
     m_size = size;
     m_msg_ptr = msg_ptr;
     m_enqueue_time = curTime;
@@ -65,6 +66,13 @@ void
 flit::print(std::ostream& out) const
 {
     out << "[flit:: ";
+    out << "global_id=" << m_global_id << " ";
+    out << "Src NI=" << m_route.src_ni << " ";
+    out << "Src Router=" << m_route.src_router << " ";
+    out << "Type=" << m_type << " ";
+    out << "Dest Router=" << m_route.dest_router << " ";
+
+/*
     out << "Id=" << m_id << " ";
     out << "Type=" << m_type << " ";
     out << "Vnet=" << m_vnet << " ";
@@ -75,6 +83,7 @@ flit::print(std::ostream& out) const
     out << "Dest Router=" << m_route.dest_router << " ";
     out << "Enqueue Time=" << m_enqueue_time << " ";
     out << "]";
+*/
 }
 
 bool

@@ -1,0 +1,6 @@
+,Processor,Cores,NoCs,L2,MC
+Peak Power (W),2266.87,,,,
+Total Leakage Power (W),362.525,,,,
+Peak Dynamic Power (W),1904.34,1700.41,100.433,4.3855,6.28473
+Gate Leakage Power (W),27.2432,25.3965,1.20191,0.0250196,0.145275
+Runtime Dynamic Power (W),328.04,257.988,45.6416,0.601128,22.6778

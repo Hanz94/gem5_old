@@ -124,7 +124,7 @@ machine(MachineType:Directory, "Directory protocol")
     if (is_valid(dir_entry)) {
       return dir_entry;
     }
-    //DPRINTF(RubyGenerated,"subodha : invalid dir entry\n");
+    ////DPRINTF(RubyGenerated,"subodha : invalid dir entry\n");
     dir_entry :=  static_cast(Entry, "pointer",
                               directory.allocate(addr, new Entry));
     return dir_entry;
@@ -132,16 +132,16 @@ machine(MachineType:Directory, "Directory protocol")
  
   State getState(TBE tbe, Addr addr) {
     if (is_valid(tbe)) {
-      DPRINTF(RubyGenerated,"subodha : comes inside is_valid(tbe)\n");
+      //DPRINTF(RubyGenerated,"subodha : comes inside is_valid(tbe)\n");
       return tbe.TBEState;
     } else if (directory.isPresent(addr)) { //subodha
-      DPRINTF(RubyGenerated,"subodha : comes inside present\n");
+      //DPRINTF(RubyGenerated,"subodha : comes inside present\n");
       return getDirectoryEntry(addr).DirectoryState;
     } else if (checkifMachineIsMemoryNode(machineID)) { //subodha
-      DPRINTF(RubyGenerated,"subodha : comes inside mach 15\n");
+      //DPRINTF(RubyGenerated,"subodha : comes inside mach 15\n");
       return getDirectoryEntry(addr).DirectoryState;
     } else {
-      DPRINTF(RubyGenerated,"subodha : comes inside else\n");
+      //DPRINTF(RubyGenerated,"subodha : comes inside else\n");
       return State:I;
     }
   }
@@ -149,7 +149,7 @@ machine(MachineType:Directory, "Directory protocol")
   void setState(TBE tbe, Addr addr, State state) {
 
     if (is_valid(tbe)) {
-	  DPRINTF(RubyGenerated,"subodha : set state called inside tbe : %s\n", state);
+	  //DPRINTF(RubyGenerated,"subodha : set state called inside tbe : %s\n", state);
       tbe.TBEState := state;
     }
 
@@ -161,7 +161,7 @@ machine(MachineType:Directory, "Directory protocol")
       }
 
       getDirectoryEntry(addr).DirectoryState := state;
-	  DPRINTF(RubyGenerated,"subodha : set state called inside ispresent : %s\n", state);
+	  //DPRINTF(RubyGenerated,"subodha : set state called inside ispresent : %s\n", state);
     
       if (state == State:I)  {
         //assert(getDirectoryEntry(addr).Owner.count() == 0);
@@ -239,9 +239,7 @@ machine(MachineType:Directory, "Directory protocol")
         TBE tbe := TBEs[in_msg.addr];
         if (in_msg.Type == CoherenceRequestType:GETS) {
 
-			NodeID nodeID := machineIDToNodeID(in_msg.Sender); /// Rani
-
-			if(machineID != map_Address_to_Memory_Controller(in_msg.addr, nodeID, machineIDToMachineType(in_msg.Sender))){ //if not on memory node
+			if(machineID != map_Address_to_Memory_Controller(in_msg.addr, machineIDToNodeID(in_msg.Sender), machineIDToMachineType(in_msg.Sender))){ //if not on memory node
 	          	trigger(Event:GETS, in_msg.addr, tbe);
 	}else{
 			trigger(Event:GETX, in_msg.addr, tbe);				
@@ -252,13 +250,13 @@ machine(MachineType:Directory, "Directory protocol")
 		trigger(Event:GETX, in_msg.addr, tbe);
 	}
 	else{
-		DPRINTF(RubyGenerated,"Owner : %d\n",getDirectoryEntry(in_msg.addr).Owner);
+		//DPRINTF(RubyGenerated,"Owner : %d\n",getDirectoryEntry(in_msg.addr).Owner);
 		trigger(Event:GETS, in_msg.addr, tbe);
 	}
 	*/
     } else if (in_msg.Type == CoherenceRequestType:GETX) {
             //setState(tbe, in_msg.addr,State:I); 
-            trigger(Event:GETX, in_msg.addr, tbe); /// MEM_GETX Rani
+            trigger(Event:GETX, in_msg.addr, tbe); /// MEM_GETX /// Rani: chnaged to GETX
         } else if (in_msg.Type == CoherenceRequestType:PUTX) {
           if (getDirectoryEntry(in_msg.addr).Owner.isElement(in_msg.Requestor)) {
             trigger(Event:PUTX, in_msg.addr, tbe);
@@ -284,9 +282,6 @@ machine(MachineType:Directory, "Directory protocol")
         TBE tbe := TBEs[in_msg.addr];
         if (in_msg.Type == MemoryRequestType:MEMORY_READ) {
 
-	  //NodeID nodeID := machineIDToNodeID(in_msg.Sender); /// Rani
-	  //DPRINTF(Rani,"L1-NodeID:%d\n", nodeID, k_printMachineID_Type(in_msg.Sender));// Rani
-                  
 	  if(machineID == map_Address_to_Directory(in_msg.addr)){ //subodha
 	    trigger(Event:Memory_Data, in_msg.addr, tbe);
 	  }
@@ -296,7 +291,7 @@ machine(MachineType:Directory, "Directory protocol")
         } else if (in_msg.Type == MemoryRequestType:MEMORY_WB) {
           trigger(Event:Memory_Ack, in_msg.addr, tbe);
         } else {
-          DPRINTF(RubySlicc,"%s\n", in_msg.Type);
+          //DPRINTF(RubySlicc,"%s\n", in_msg.Type);
           error("Invalid message");
         }
       }
@@ -314,6 +309,7 @@ machine(MachineType:Directory, "Directory protocol")
         out_msg.Sender := machineID; //subodha
         out_msg.Destination.add(in_msg.Requestor);
         out_msg.MessageSize := MessageSizeType:Writeback_Control;
+
       }
     }
   }
@@ -425,7 +421,7 @@ machine(MachineType:Directory, "Directory protocol")
         out_msg.Sender := machineID; //subodha
         out_msg.Destination := getDirectoryEntry(in_msg.addr).Owner;
         out_msg.MessageSize := MessageSizeType:Writeback_Control;
-        //DPRINTF(RubyGenerated,"Owner : %d\n",getDirectoryEntry(in_msg.addr).Owner);
+        ////DPRINTF(RubyGenerated,"Owner : %d\n",getDirectoryEntry(in_msg.addr).Owner);
       }
     }
   }
@@ -441,13 +437,12 @@ machine(MachineType:Directory, "Directory protocol")
 	out_msg.Requestor := in_msg.Requestor; //swap_machine_type(in_msg.Requestor);
 	//out_msg.Requestor := machineID;
 
-	NodeID nodeID := machineIDToNodeID(out_msg.Sender); /// Rani
-	DPRINTF(Rani,"L1-NodeID:%d\n", nodeID, k_printMachineID_Type(out_msg.Sender));// Rani
+	NodeID nodeID := machineIDToNodeID(out_msg.Requestor); /// Rani
 
 	out_msg.Destination.add(map_Address_to_Memory_Controller(address, nodeID, machineIDToMachineType(machineID)));
 	out_msg.MessageSize := MessageSizeType:Control;
         out_msg.Sender := machineID; //subodha
-	//DPRINTF(RubyGenerated,"subodha: forwarded cache request to memory controller %s from %s\n", out_msg.Destination, out_msg.Requestor);
+	////DPRINTF(RubyGenerated,"subodha: forwarded cache request to memory controller %s from %s\n", out_msg.Destination, out_msg.Requestor);
 	}
     }
   }
@@ -462,12 +457,11 @@ machine(MachineType:Directory, "Directory protocol")
 			out_msg.Requestor := in_msg.Requestor;
 
 			NodeID nodeID := machineIDToNodeID(out_msg.Requestor); /// Rani
-			DPRINTF(Rani,"L1-NodeID:%d\n", nodeID, k_printMachineID_Type(out_msg.Sender));// Rani
 			
 			out_msg.Destination.add(map_Address_to_Memory_Controller(address, nodeID, machineIDToMachineType(in_msg.Requestor)));
 			out_msg.MessageSize := MessageSizeType:Data;
 	        out_msg.Sender := machineID;
-			//DPRINTF(RubyGenerated,"subodha: forwarded cache request to memory controller %s from %s\n", out_msg.Destination, out_msg.Requestor);
+			////DPRINTF(RubyGenerated,"subodha: forwarded cache request to memory controller %s from %s\n", out_msg.Destination, out_msg.Requestor);
 		}
 	}
   }
@@ -554,8 +548,6 @@ machine(MachineType:Directory, "Directory protocol")
 
   action(qf_queueMemoryFetchRequest, "qf", desc="Queue off-chip fetch request") {
     peek(requestQueue_in, RequestMsg) {
-	/// ADD HEAR
-	//Destination.add(map_Address_to_Memory_Controller(address, nodeID));
       queueMemoryRead(in_msg.Requestor, address, to_memory_controller_latency);
     }
   }
@@ -568,7 +560,6 @@ machine(MachineType:Directory, "Directory protocol")
 
   action(qw_queueMemoryWBRequest_partial, "qwp", desc="Queue off-chip writeback request") {
     peek(dmaRequestQueue_in, DMARequestMsg) {
-/// ADD HEAR
       queueMemoryWritePartial(in_msg.Requestor, address,
                               to_memory_controller_latency, in_msg.DataBlk,
                               in_msg.Len);
@@ -585,7 +576,6 @@ machine(MachineType:Directory, "Directory protocol")
 
   action(l_queueMemoryWBRequest, "lq", desc="Write PUTX data to memory") {
     peek(requestQueue_in, RequestMsg) {
-// ADD HEAR
       queueMemoryWrite(in_msg.Requestor, address, to_memory_controller_latency,
                        in_msg.DataBlk);
     }

@@ -44,22 +44,6 @@ map_Address_to_DirectoryNode(Addr addr)
     return DirectoryMemory::mapAddressToDirectoryVersion(addr);
 }
 
- /*
-inline NodeID /// Rani
-k_map_Address_to_DirectoryNode(Addr addr, NodeID s_nodeID, MachineType m_type)
-{
-    //return DirectoryMemory::mapAddressToMemoryController(addr, 1, s_nodeID); /// Rani
-    return DirectoryMemory::mapAddressToMemoryController(addr, 1, s_nodeID, m_type); /// Rani
-}
-
-inline MachineID /// Rani
-k_map_Address_to_Directory(Addr addr, NodeID s_nodeID)
-{
-    MachineID mach = {MachineType_Directory, k_map_Address_to_DirectoryNode(addr, s_nodeID)};
-    return mach;
-}
-*/
-
 inline NodeID
 map_Address_to_TCCdirNode(Addr addr)
 {

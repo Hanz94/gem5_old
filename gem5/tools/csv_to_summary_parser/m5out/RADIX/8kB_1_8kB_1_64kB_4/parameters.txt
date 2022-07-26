@@ -1,0 +1,37 @@
+number_of_cores : 32
+number_of_L1Directories : 32
+target_core_clockrate : 3400
+clock_rate : 3400
+
+icache_config_capacity : 8192
+icache_config_block_width : 64
+icache_config_associativity : 1
+icache_config_bank : 1
+icache_config_throughput_wrt_core_clock : 8
+icache_config_latency_wrt_core_clock : 3
+icache_config_output_width : 64
+icache_config_cache policy : 0
+
+dcache_config_capacity : 8192
+dcache_config_block_width : 64
+dcache_config_associativity : 1
+dcache_config_bank : 1
+dcache_config_throughput_wrt_core_clock : 3
+dcache_config_latency_wrt_core_clock : 3
+dcache_config_output_width : 64
+dcache_config_cache policy : 1
+
+L2cache_config_capacity : 65536
+L2cache_config_block_width : 64
+L2cache_config_associativity : 4
+L2cache_config_bank : 8
+L2cache_config_throughput_wrt_core_clock : 8
+L2cache_config_latency_wrt_core_clock : 8
+L2cache_config_output_width : 64
+L2cache_config_cache policy : 1
+
+NoC0_horizontal_nodes : 8
+NoC0_vertical_nodes : 4
+
+core_tech_node : 65
+number_mcs : 8

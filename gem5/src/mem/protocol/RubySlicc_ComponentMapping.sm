@@ -49,6 +49,3 @@ NodeID machineIDToVersion(MachineID machID);
 MachineType machineIDToMachineType(MachineID machID);
 MachineID createMachineID(MachineType t, NodeID i);
 
-void k_printNodeID(NodeID nodeID); /// Rani
-MachineType k_printMachineID_Type(MachineID machID); /// Rani
-NodeID k_map_Address_to_Directory(Addr addr, NodeID s_nodeID); /// Rani

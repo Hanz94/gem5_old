@@ -275,13 +275,9 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
 		out_msg.Type := CoherenceRequestType:GETX;
 		out_msg.Requestor := in_msg.Requestor;
 		out_msg.Destination.add(in_msg.Sender);
-
-		//NodeID s_nodeID := machineIDToNodeID(out_msg.Sender); /// Rani
-		//DPRINTF(Rani,"L1-NodeID:%d, Machine_Type:%s\n", machineIDToNodeID(out_msg.Sender), );// Rani
-		//out_msg.Destination.add(k_map_Address_to_Directory(address, s_nodeID)); /// Rani
-
 		out_msg.Sender := machineID;
 		out_msg.MessageSize := MessageSizeType:Control;
+
 	    }
 	}
   } */
@@ -293,14 +289,9 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
       out_msg.Type := CoherenceRequestType:GETS; 
       out_msg.Requestor := machineID;
       out_msg.Destination.add(map_Address_to_Directory(address));
-
-      //NodeID s_nodeID := machineIDToNodeID(out_msg.Sender); /// Rani
-      //DPRINTF(Rani,"L1-NodeID:%d, Machine_Type:%s\n", machineIDToNodeID(out_msg.Sender), );// Rani
-      //out_msg.Destination.add(k_map_Address_to_Directory(address, s_nodeID)); /// Rani
-
       out_msg.Sender := machineID; //subodha
       out_msg.MessageSize := MessageSizeType:Control;
-      DPRINTF(Cache,"viola! : from %d to %s\n", machineID, map_Address_to_Directory(address));
+
     }
   }
 
@@ -312,13 +303,9 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
       out_msg.Requestor := machineID;
       out_msg.Sender := machineID; //subodha
       out_msg.Destination.add(map_Address_to_Directory(address));
-
-      //NodeID s_nodeID := machineIDToNodeID(out_msg.Sender); /// Rani
-      //DPRINTF(Rani,"L1-NodeID:%d\n", machineIDToNodeID(out_msg.Sender));// Rani
-      //out_msg.Destination.add(k_map_Address_to_Directory(address, s_nodeID)); /// Rani
-
       out_msg.DataBlk := cache_entry.DataBlk;
       out_msg.MessageSize := MessageSizeType:Data;
+
     }
   }
 
@@ -332,6 +319,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
         out_msg.Destination.add(in_msg.Requestor);
         out_msg.DataBlk := cache_entry.DataBlk;
         out_msg.MessageSize := MessageSizeType:Response_Data;
+
       }
     }
   }
@@ -346,6 +334,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
         out_msg.Destination.add(in_msg.Requestor);
         out_msg.DataBlk := tbe.DataBlk;
         out_msg.MessageSize := MessageSizeType:Response_Data;
+
       }
     }
   }
@@ -388,7 +377,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
 
   action(r_load_hit, "r", desc="Notify sequencer the load completed.") {
     assert(is_valid(cache_entry));
-    DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
+    //DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
     cacheMemory.setMRU(cache_entry);
     sequencer.readCallback(address, cache_entry.DataBlk, false);
   }
@@ -396,7 +385,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
   action(rx_load_hit, "rx", desc="External load completed.") {
     peek(responseNetwork_in, ResponseMsg) {
       assert(is_valid(cache_entry));
-      DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
+      //DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
       cacheMemory.setMRU(cache_entry);
       sequencer.readCallback(address, cache_entry.DataBlk, true,
                              machineIDToMachineType(in_msg.Sender));
@@ -405,7 +394,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
 
   action(s_store_hit, "s", desc="Notify sequencer that store completed.") {
     assert(is_valid(cache_entry));
-    DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
+    //DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
     cacheMemory.setMRU(cache_entry);
     sequencer.writeCallback(address, cache_entry.DataBlk, false);
   }
@@ -413,7 +402,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
   action(sx_store_hit, "sx", desc="External store completed.") {
     peek(responseNetwork_in, ResponseMsg) {
       assert(is_valid(cache_entry));
-      DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
+      //DPRINTF(RubySlicc,"%s\n", cache_entry.DataBlk);
       cacheMemory.setMRU(cache_entry);
       sequencer.writeCallback(address, cache_entry.DataBlk, true,
                               machineIDToMachineType(in_msg.Sender));
@@ -429,7 +418,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
 
   action(forward_eviction_to_cpu, "\cc", desc="sends eviction information to the processor") {
     if (send_evictions) {
-      DPRINTF(RubySlicc, "Sending invalidation for %#x to the CPU\n", address);
+      //DPRINTF(RubySlicc, "Sending invalidation for %#x to the CPU\n", address);
       sequencer.evictionCallback(address);
     }
   }

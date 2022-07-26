@@ -1,0 +1,16 @@
+#!/bin/sh
+
+sleep 30
+
+cd /parsec/install/bin
+
+m5 resetstats
+
+./blackscholes 1 /parsec/install/inputs/blackscholes/in_16K.txt /parsec/install/inputs/out.txt
+
+m5 dumpstats
+
+echo "Done :D"
+
+m5 exit
+

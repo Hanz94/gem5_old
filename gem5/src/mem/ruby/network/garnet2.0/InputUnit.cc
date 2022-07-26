@@ -38,6 +38,8 @@
 #include "mem/ruby/network/garnet2.0/Credit.hh"
 #include "mem/ruby/network/garnet2.0/Router.hh"
 
+#include "debug/Rani.hh"
+
 using namespace std;
 using m5::stl_helpers::deletePointers;
 
@@ -109,7 +111,6 @@ InputUnit::wakeup()
         } else {
             assert(m_vcs[vc]->get_state() == ACTIVE_);
         }
-
 
         // Buffer the flit
         m_vcs[vc]->insertFlit(t_flit);

@@ -74,6 +74,8 @@ class NetworkInterface : public ClockedObject, public Consumer
     uint32_t functionalWrite(Packet *);
 
   private:
+    int global_id; /// Rani
+
     GarnetNetwork *m_net_ptr;
     const NodeID m_id;
     const int m_virtual_networks, m_vc_per_vnet, m_num_vcs;

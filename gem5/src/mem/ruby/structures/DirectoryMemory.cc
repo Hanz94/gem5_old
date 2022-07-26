@@ -87,7 +87,6 @@ DirectoryMemory::mapAddressToDirectoryVersion(Addr address)
                            m_numa_high_bit - m_num_directories_bits + 1,
                            m_numa_high_bit);
 
-    //std::cout << ret << "\n";
     return ret;
 }
 
@@ -96,7 +95,7 @@ uint64_t
 //DirectoryMemory::mapAddressToMemoryController(Addr address, int m_num_memories_bits, NodeID nodeID)
 DirectoryMemory::mapAddressToMemoryController(Addr address, int m_num_memories_bits, NodeID nodeID, MachineType m_type)
 {
-    uint64_t memoryControllers[] = {12}; /// Memory controller (ID=12) connected at the router 12
+    uint64_t memoryControllers[] = {12, 15, 5};
     if (m_num_directories_bits == 0)
         return 0;
     //uint64_t indx = bitSelect(address,
@@ -105,7 +104,18 @@ DirectoryMemory::mapAddressToMemoryController(Addr address, int m_num_memories_b
     //return memoryControllers[indx];
 
     /// Rani
-    return memoryControllers[0];
+
+    if (nodeID == 0) {
+	return memoryControllers[1];
+    }
+    else if (nodeID == 3) {
+	return memoryControllers[0];
+    }
+    else {
+        return memoryControllers[2];
+    }
+
+//    return memoryControllers[0];
 }
 
 bool

@@ -44,6 +44,8 @@
 #include "mem/ruby/network/garnet2.0/flitBuffer.hh"
 #include "mem/ruby/slicc_interface/Message.hh"
 
+#include "debug/Rani.hh"
+
 using namespace std;
 using m5::stl_helpers::deletePointers;
 
@@ -76,6 +78,7 @@ NetworkInterface::init()
     for (int i = 0; i < m_num_vcs; i++) {
         m_out_vc_state.push_back(new OutVcState(i, m_net_ptr));
     }
+    global_id = 0;
 }
 
 NetworkInterface::~NetworkInterface()
@@ -177,6 +180,15 @@ NetworkInterface::wakeup()
             // enqueue into the protocol buffers
             outNode_ptr[t_flit->get_vnet()]->enqueue(
                 t_flit->get_msg_ptr(), curTime, cyclesToTicks(Cycles(1)));
+	
+	/// Rani
+		if (m_router_id == 0)
+        	{
+			if (t_flit->get_route().src_router == 15) {
+                		DPRINTF(Rani, "D:%s\n", *t_flit);
+        		}
+		}
+
         }
         // Simply send a credit back since we are not buffering
         // this flit in the NI
@@ -288,14 +300,21 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
 
         m_net_ptr->increment_injected_packets(vnet);
         for (int i = 0; i < num_flits; i++) {
+	    global_id++;
             m_net_ptr->increment_injected_flits(vnet);
-            flit *fl = new flit(i, vc, vnet, route, num_flits, new_msg_ptr,
+            flit *fl = new flit(global_id, i, vc, vnet, route, num_flits, new_msg_ptr,
                 curCycle());
 
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));
             m_ni_out_vcs[vc]->insert(fl);
-        }
-
+       
+	/// Rani
+	/* 
+	if (m_router_id == 15)
+        {
+                DPRINTF(Rani, "S%s\n", *fl);
+        }*/
+	}
         m_ni_out_vcs_enqueue_time[vc] = curCycle();
         m_out_vc_state[vc]->setState(ACTIVE_, curCycle());
     }
