@@ -1,0 +1,8 @@
+4
+8
+1
+2,bitcnts,stringsearch_small,
+2,FMM,WATER-NSQUARED,
+2,BARNES,LU,
+2,CHOLESKY,sha,
+

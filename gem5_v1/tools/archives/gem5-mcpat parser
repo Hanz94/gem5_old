@@ -1,0 +1,62 @@
+To be taken from stats.txt
+
+component id="system"
+	number_of_cores (extract this from num_cores)
+	number_of_L1Directories (extract this from num_dirs)
+	target_core_clockrate ((extract this from processor speed)
+		*the above three fileds should be populated by the cmd line parameters we pass to gem5.
+
+	total_cycles (aggregate all system.cpuXX.numCycles)
+	idle_cycles (aggregate all system.cpuXX.num_idle_cycles)
+	busy_cycles (aggregate all system.cpuXX.num_busy_cycles)
+
+component id="system.core0"
+	clock_rate
+	total_instructions (sim_insts)
+    int_instructions (aggregate all system.cpuXX.num_int_insts)
+    fp_instructions (aggregate all system.cpuXX.fp_insts)
+	branch_instructions (aggregate all system.cpuXX.Branches) 
+	branch_mispredictions (I didn't find any gem5 stat for this. Leave it at 0 for now)
+	load_instructions (aggregate all system.cpuXX.num_load_insts)
+	store_instructions (aggregate all system.cpuXX.num_store_insts)
+	committed_instructions (aggregate all system.cpuXX.committedInsts)
+	committed_int_instructions (aggregate all system.cpuXX.num_int_alu_accesses)
+	committed_fp_instructions (aggregate all system.cpuXX.num_fp_alu_accesses)
+	function_calls (aggregate all system.cpuXX.num_func_calls)
+	ialu_accesses (aggregate all system.cpuXX.num_int_alu_accesses)
+	fpu_accesses (this equals to fp_instructions)
+	mul_accesses (aggregate all system.cpuXX.op_class::IntMult + system.cpu00.op_class::IntDiv)
+	cdb_alu_accesses (same as ialu_accesses)
+	cdb_mul_accesses (same as mul_accesses)
+	cdb_fpu_accesses (same as fpu_accesses)
+
+component id="system.core0.icache"
+	i_cache_config (extract this from the cache configuration we are inputting. Keep the reads hits/misses at 0)
+	
+	
+component id="system.core0.dcache"
+	dcache_config (extract this from the cache configuration we are inputting)
+	read_accesses (aggregate all system.ruby.l1_cntrlXX.cacheMemory.demand_accesses)
+	read_misses (aggregate all system.ruby.l1_cntrlXX.cacheMemory.demand_misses)
+		*keep write misses/accesses at 0
+
+
+component id="system.L1Directory0"
+	read_accesses (equals to the number of cache misses)
+
+component id="system.L20"
+	L2_config (extract this from the cache configuration we are inputting)
+	read_accesses (I will tell you how to populate this field later)
+	read_misses (I will tell you how to populate this field later)
+
+component id="system.NoC0"
+	horizontal_nodes (depends on the topology. if we are using 8x8 Mesh, this will be 8)
+	vertical_nodes (depends on the topology. if we are using 8x8 Mesh, this will be 8)
+	total_accesses (system.ruby.network.flits_injected::total x system.ruby.network.average_hops)	
+
+component id="system.mc" name="mc"
+	memory_accesses (aggregate all system.mem_ctrlsXX.memReq)
+	memory_reads (aggregate all system.mem_ctrlsXX.memRead)
+	memory_writes (aggregate all system.mem_ctrlsXX.memWrite)
+
+*don't change anything under flashc, pcie and niu

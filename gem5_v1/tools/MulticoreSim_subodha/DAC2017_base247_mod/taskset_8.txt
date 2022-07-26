@@ -1,0 +1,8 @@
+4
+8
+247
+4,sha,mcf,untoast,toast,
+4,applu,gcc,bitcount,ammp,
+4,lucas,FFT,CRC32,patricia,
+4,vpr,basicmath,mgrid,swim,
+6000

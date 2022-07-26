@@ -1,0 +1,8 @@
+4
+8
+247
+3,mgrid,parser,gcc,
+3,toast,FFT,mcf,
+3,bitcount,ammp,applu,
+3,qsort,dijkstra,patricia,
+5000

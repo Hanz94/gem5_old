@@ -1,0 +1,10 @@
+#!/bin/bash
+rm -f results_tm.csv
+rm -f allSets.csv
+
+dir="subodha"
+taskset="taskset_1.txt"
+deadline=195000
+
+./dcr csv_all/$dir $taskset $deadline
+

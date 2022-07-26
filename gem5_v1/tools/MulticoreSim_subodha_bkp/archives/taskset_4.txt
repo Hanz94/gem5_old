@@ -1,0 +1,7 @@
+4
+8
+1
+3,RADIX,LU,FFT,
+3,crc,sha,stringsearch_small,
+3,qsort,BARNES,WATER-NSQUARED,
+3,bitcnts,FMM,stringsearch_small,

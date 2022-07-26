@@ -1,0 +1,8 @@
+4
+8
+247
+2,mgrid,FFT,
+2,dijkstra,parser,
+2,CRC32,swim,
+2,applu,bitcount,
+1800

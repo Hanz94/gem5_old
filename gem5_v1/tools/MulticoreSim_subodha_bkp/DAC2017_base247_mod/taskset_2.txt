@@ -1,0 +1,8 @@
+4
+8
+247
+2,mcf,sha,
+2,gcc,bitcount,
+2,patricia,lucas,
+2,basicmath,swim,
+3500

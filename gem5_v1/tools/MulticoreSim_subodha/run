@@ -1,0 +1,14 @@
+#!/bin/bash
+rm -f results_tm.csv
+rm -f allSets.csv
+
+#dir="profile_table_exhaustive"
+#dir="profile_table_IL1T_hue_ml"
+#dir="profile_table_rand_5"
+dir="profile_table_IL1T_heu"
+
+taskset="taskset_1.txt"
+deadline=84000
+
+./dcr csv_all/$dir $taskset $deadline
+

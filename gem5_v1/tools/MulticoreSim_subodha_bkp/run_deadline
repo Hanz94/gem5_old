@@ -1,0 +1,14 @@
+#!/bin/bash
+rm -f results_tm.csv
+rm -f allSets.csv
+
+dir="profile_table_exhaustive"
+taskset="taskset_1.txt"
+deadline=81800
+deadline_end=84000
+
+while [ $deadline -le $deadline_end ]
+do
+  ./dcr csv_all/$dir $taskset $deadline
+  (( deadline = deadline + 200 ))
+done

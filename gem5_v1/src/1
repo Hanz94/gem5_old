@@ -1,0 +1,26 @@
+dev/storage/ide_atareg.h:    uint8_t	atap_revision[8];	/* 23-26: firmware revision */
+dev/dma_device.hh: *     uint8_t data[8];
+dev/arm/ufs_device.cc:    sensecodelist[8] = 0x1F; //data length
+cpu/kvm/x86_cpu.cc:    uint8_t fpr[8][16];
+cpu/kvm/x86_cpu.cc:        *(X86ISA::FloatRegBits *)&fpu.xmm[i][8] =
+cpu/kvm/x86_cpu.cc:                            *(X86ISA::FloatRegBits *)&fpu.xmm[i][8]);
+mem/slicc/parser.py:        p[0] = ast.InPortDeclAST(self, p[3], p[5], p[7], p[8], p[10])
+mem/slicc/parser.py:        p[0] = ast.OutPortDeclAST(self, p[3], p[5], p[7], p[8])
+mem/slicc/parser.py:        p[0] = ast.TransitionDeclAST(self, p[7], p[3], p[5], None, p[8])
+mem/slicc/parser.py:        p[0] = ast.PeekStatementAST(self, p[3], p[5], p[6], p[8], "peek")
+arch/x86/nativetrace.hh:        uint64_t mmx[8];
+arch/isa_parser.py:        expr = 'bits(machInst, %2d, %2d)' % (t[6], t[8])
+arch/isa_parser.py:            expr = 'sext<%d>(%s)' % (t[6] - t[8] + 1, expr)
+arch/sparc/isa.hh:    uint64_t scratchPad[8];
+arch/sparc/linux/linux.hh:        uint8_t __pad3[8];
+arch/sparc/linux/linux.hh:        uint8_t __pad4[8];
+arch/arm/remote_gdb.cc:    r.gpr[8] = context->readIntReg(INTREG_R8);
+arch/arm/remote_gdb.cc:    context->setIntReg(INTREG_R8, r.gpr[8]);
+arch/arm/isa/insts/neon.isa:                FloatRegBits regs[8];
+arch/arm/isa/insts/neon.isa:                uint8_t bytes[8];
+arch/arm/pagetable.hh:             *      --   [8]  (Implementation Defined)
+base/loader/exec_ecoff.h:        char	s_name[8];	/* name */
+unittest/stattest.cc:    s16[1][8] += 8;
+unittest/stattest.cc:    s15[8].sample(1234);
+unittest/stattest.cc:    s14[8].sample(8734);
+unittest/stattest.cc:    s15[8].sample(8734);

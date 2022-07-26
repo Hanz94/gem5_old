@@ -1,0 +1,53 @@
+g++ -g -o dcr  main.cpp
+In file included from main.cpp:12:0:
+MulticoreDCRSim.h: In member function ‘int MulticoreDCRSim::readTaskInfo(std::__cxx11::string)’:
+MulticoreDCRSim.h:169:28: warning: format ‘%s’ expects argument of type ‘char*’, but argument 3 has type ‘char (*)[1024]’ [-Wformat=]
+    sscanf(line,"%s",&inName);
+                            ^
+MulticoreDCRSim.h: In member function ‘int MulticoreDCRSim::loadTaskProfileTable(std::__cxx11::string)’:
+MulticoreDCRSim.h:233:36: warning: format ‘%s’ expects argument of type ‘char*’, but argument 3 has type ‘char (*)[1024]’ [-Wformat=]
+     sscanf(line,"%s",&inL1configStr);
+                                    ^
+MulticoreDCRSim.h: In member function ‘int MulticoreDCRSim::loadTaskProfileTableVul(std::__cxx11::string)’:
+MulticoreDCRSim.h:291:36: warning: format ‘%s’ expects argument of type ‘char*’, but argument 3 has type ‘char (*)[1024]’ [-Wformat=]
+     sscanf(line,"%s",&inL1configStr);
+                                    ^
+MulticoreDCRSim.h: In member function ‘int MulticoreDCRSim::randomNumberGenerater(int, int)’:
+MulticoreDCRSim.h:2059:42: warning: integer overflow in expression [-Woverflow]
+  return (int)((float) rand() / (RAND_MAX + 1) * (range_max - range_min) + 0.5f) + range_min;
+                                          ^
+MulticoreDCRSim.h: In member function ‘void MulticoreDCRSim::dumpPartitionList()’:
+MulticoreDCRSim.h:2073:60: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘std::vector<std::vector<int> >::size_type {aka long unsigned int}’ [-Wformat=]
+  printf("partitionList.size() = %d \n",partitionList.size());
+                                                            ^
+MulticoreDCRSim.h: In member function ‘int MulticoreDCRSim::readTaskInfoAll(std::__cxx11::string)’:
+MulticoreDCRSim.h:2255:27: warning: format ‘%s’ expects argument of type ‘char*’, but argument 3 has type ‘char (*)[1024]’ [-Wformat=]
+   sscanf(line,"%s",&inName);
+                           ^
+MulticoreDCRSim.h: In member function ‘int MulticoreDCRSim::loadTaskProfileTableAll(std::__cxx11::string)’:
+MulticoreDCRSim.h:2314:35: warning: format ‘%s’ expects argument of type ‘char*’, but argument 3 has type ‘char (*)[1024]’ [-Wformat=]
+    sscanf(line,"%s",&inL1configStr);
+                                   ^
+MulticoreDCRSim.h: In member function ‘void MulticoreDCRSim::generateAllTaskMapping()’:
+MulticoreDCRSim.h:2374:66: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘std::vector<std::vector<int> >::size_type {aka long unsigned int}’ [-Wformat=]
+  printf("Before post-processing: %d \n",taskMappingListTmp.size());
+                                                                  ^
+MulticoreDCRSim.h:2455:65: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘std::vector<std::vector<int> >::size_type {aka long unsigned int}’ [-Wformat=]
+  printf("After post-processing: %d \n",taskMappingListAll.size());
+                                                                 ^
+MulticoreDCRSim.h: In member function ‘void MulticoreDCRSim::varyingPartitionSolverBF(int, std::vector<double>)’:
+MulticoreDCRSim.h:2751:36: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+    printf("Core %d, PFset %d: ",i,j);
+                                    ^
+MulticoreDCRSim.h: In member function ‘void MulticoreDCRSim::varyingPartitionSolverDP(int, std::vector<double>)’:
+MulticoreDCRSim.h:3013:36: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+    printf("Core %d, PFset %d: ",i,k);
+                                    ^
+MulticoreDCRSim.h:3047:77: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+     printf("  NOW: core %d , partition factor set %d , Task %d ... \n",i,k,j);
+                                                                             ^
+MulticoreDCRSim.h:3047:77: warning: format ‘%d’ expects argument of type ‘int’, but argument 4 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+MulticoreDCRSim.h: In member function ‘void MulticoreDCRSim::exploreAllVaryingPartition()’:
+MulticoreDCRSim.h:3309:72: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘std::vector<std::vector<int> >::size_type {aka long unsigned int}’ [-Wformat=]
+  printf("varyingPartitionList size = %d \n",varyingPartitionList.size());
+                                                                        ^

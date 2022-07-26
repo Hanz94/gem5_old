@@ -1,0 +1,8 @@
+4
+8
+247
+3,vpr,sha,FFT,
+3,CRC32,lucas,untoast,
+3,mgrid,bitcount,qsort,
+3,applu,parser,stringsearch,
+1800

@@ -1,0 +1,1 @@
+docker run --volume /home/hansika/gem5_old:/gem5 --volume /home/hansika/.gem5_16_bash_history:/root/.bash_history --rm -it gem_5:16.04 bash

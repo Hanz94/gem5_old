@@ -1,0 +1,7 @@
+To be read from a parameter file
+
+component id="system"
+	core_tech_node (fix this to 65nm for now)
+
+component id="system.mc" name="mc"
+	number_mcs (fix this to 8 for now)

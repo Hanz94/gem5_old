@@ -1,0 +1,8 @@
+4
+8
+247
+2,applu,lucas,
+2,dijkstra,swim,
+2,ammp,FFT,
+2,basicmath,stringsearch,
+2000

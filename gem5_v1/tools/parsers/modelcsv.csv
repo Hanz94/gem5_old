@@ -1,0 +1,6 @@
+,Processor,Cores,NoCs,L2,MC
+Peak Power (W),,,,,
+Total Leakage Power (W),,,,,
+Peak Dynamic Power (W),,,,,
+Gate Leakage Power (W),,,,,
+Runtime Dynamic Power (W),,,,,

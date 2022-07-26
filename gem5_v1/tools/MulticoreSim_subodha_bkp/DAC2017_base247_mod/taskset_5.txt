@@ -1,0 +1,8 @@
+4
+8
+247
+3,mcf,toast,sha,
+3,gcc,parser,stringsearch,
+3,patricia,qsort,vpr,
+3,basicmath,CRC32,ammp,
+4000

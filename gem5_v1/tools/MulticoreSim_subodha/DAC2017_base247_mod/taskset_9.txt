@@ -1,0 +1,8 @@
+4
+8
+247
+4,gcc,stringsearch,parser,dijkstra,
+4,untoast,mcf,ammp,bitcount,
+4,lucas,patricia,qsort,vpr,
+4,basicmath,toast,applu,CRC32,
+5500
