@@ -45,6 +45,7 @@
 #include "mem/ruby/slicc_interface/Message.hh"
 
 #include "debug/Rani.hh"
+#include "debug/Hello.hh"
 
 using namespace std;
 using m5::stl_helpers::deletePointers;
@@ -181,13 +182,13 @@ NetworkInterface::wakeup()
             outNode_ptr[t_flit->get_vnet()]->enqueue(
                 t_flit->get_msg_ptr(), curTime, cyclesToTicks(Cycles(1)));
 	
-	/// Rani
-		if (m_router_id == 0)
-        	{
-			if (t_flit->get_route().src_router == 15) {
-                		DPRINTF(Rani, "D:%s\n", *t_flit);
-        		}
-		}
+	// /// Rani
+	// 	if (m_router_id == 0)
+    //     	{
+	// 		if (t_flit->get_route().src_router == 15) {
+    //             		DPRINTF(Rani, "D:%s\n", *t_flit);
+    //     		}
+	// 	}
 
         }
         // Simply send a credit back since we are not buffering
@@ -261,6 +262,8 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         }
         MsgPtr new_msg_ptr = msg_ptr->clone();
         NodeID destID = dest_nodes[ctr];
+
+        DPRINTF(Hello, "packet from: %#i : to: %#i \n", m_id, destID );
 
         Message *new_net_msg_ptr = new_msg_ptr.get();
         if (dest_nodes.size() > 1) {

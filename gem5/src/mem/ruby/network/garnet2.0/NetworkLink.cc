@@ -35,13 +35,16 @@
 
 #include "mem/ruby/network/garnet2.0/CreditLink.hh"
 
+#include "debug/Hello.hh"
+
 NetworkLink::NetworkLink(const Params *p)
     : ClockedObject(p), Consumer(this), m_id(p->link_id),
       m_type(NUM_LINK_TYPES_),
       m_latency(p->link_latency),
       linkBuffer(new flitBuffer()), link_consumer(nullptr),
       link_srcQueue(nullptr), m_link_utilized(0),
-      m_vc_load(p->vcs_per_vnet * p->virt_nets)
+      m_vc_load(p->vcs_per_vnet * p->virt_nets),
+      previous_flit_recived_time(0)
 {
 }
 
@@ -69,6 +72,19 @@ NetworkLink::wakeup()
         flit *t_flit = link_srcQueue->getTopFlit();
         t_flit->set_time(curCycle() + m_latency);
         linkBuffer->insert(t_flit);
+        int ipd = t_flit->get_time() - previous_flit_recived_time;
+        // if(previous_flit_recived_time == 0){
+        //     ipd = 0;
+        // }
+        if(m_type == EXT_IN_){
+            // DPRINTF(Hello, "NI to R Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
+            DPRINTF(Hello, "Upstream: IPD: %#i :no of flits: %#i :vnet: %#i \n", ipd,t_flit->get_size(), t_flit->get_vnet());
+        }
+        else if(m_type == EXT_OUT_){
+            // DPRINTF(Hello, "R to NI Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
+            DPRINTF(Hello, "Downstream: IPD: %#i :no of flits: %#i :vnet: %#i \n", ipd, t_flit->get_size(), t_flit->get_vnet());
+        }
+        previous_flit_recived_time = t_flit->get_time();
         link_consumer->scheduleEventAbsolute(clockEdge(m_latency));
         m_link_utilized++;
         m_vc_load[t_flit->get_vc()]++;
