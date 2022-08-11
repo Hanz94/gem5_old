@@ -125,6 +125,12 @@ def addNoISAOptions(parser):
     parser.add_option("--maxtime", type="float", default=None,
                       help="Run to the specified absolute simulated time in "
                       "seconds")
+    
+    # newly introduced params for memory controller postioning (mapping of memcontoller based on source)
+    parser.add_option("--dir-mp-src1", type="int", default=0,
+                      help="Source of 1st Directory Mapping")
+    parser.add_option("--dir-mp-src2", type="int", default=3,
+                      help="Source of 2nd Directory Mapping")
 
 # Add common options that assume a non-NULL ISA.
 def addCommonOptions(parser):

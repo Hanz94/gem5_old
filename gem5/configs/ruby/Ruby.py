@@ -76,6 +76,15 @@ def define_options(parser):
     parser.add_option("--recycle-latency", type="int", default=10,
                       help="Recycle latency for ruby controller input buffers")
 
+
+    # newly introduced params for memory controller postioning (mapping of memcontoller based on source)
+    parser.add_option("--dir-mp-mem1", type="int", default=12,
+                      help="Memory Controller of 1st Directory Mapping")
+    parser.add_option("--dir-mp-mem2", type="int", default=15,
+                      help="Memory Controller of 2nd Directory Mapping")
+    parser.add_option("--dir-mp-default", type="int", default=5,
+                      help="Memory Controller for default Directory Mapping")
+
     protocol = buildEnv['PROTOCOL']
     exec "import %s" % protocol
     eval("%s.define_options(parser)" % protocol)
@@ -105,6 +114,14 @@ def setup_memory_controllers(system, ruby, dir_cntrls, options):
     # contiguous address range as of now.
     for dir_cntrl in dir_cntrls:
         dir_cntrl.directory.numa_high_bit = numa_bit
+
+        # newly introduced params for memory controller postioning (mapping of memcontoller based on source)
+        dir_cntrl.directory.dir_mp_src1 = options.dir_mp_src1
+        dir_cntrl.directory.dir_mp_src2 = options.dir_mp_src2
+        dir_cntrl.directory.dir_mp_mem1 = options.dir_mp_mem1
+        dir_cntrl.directory.dir_mp_mem2 = options.dir_mp_mem2
+        dir_cntrl.directory.dir_mp_default = options.dir_mp_default
+
 
         crossbar = None
         if len(system.mem_ranges) > 1:

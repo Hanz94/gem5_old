@@ -231,44 +231,22 @@ if options.simpoint_profile:
         fatal("SimPoint generation not supported with more than one CPUs")
 
 
-
-cores = [0, 3]
-system.cpu[0].workload = multiprocesses[0]
-system.cpu[3].workload = multiprocesses[1]
+system.cpu[options.dir_mp_src1].workload = multiprocesses[0]
+# system.cpu[options.dir_mp_src2].workload = multiprocesses[1]
 
 for i in xrange(np):
-    #if i not in cores:
-    if i == 0:
-	system.cpu[i].workload = multiprocesses[0]
-    elif i == 3:
-	system.cpu[i].workload = multiprocesses[1]
+    if i == options.dir_mp_src1:
+	    system.cpu[i].workload = multiprocesses[0]
+        # print options.dir_mp_src1
+    elif i == options.dir_mp_src2 and len(multiprocesses) > 1:
+	    system.cpu[i].workload = multiprocesses[1]
     else:
-	system.cpu[i].workload = multiprocesses[0]
+	    system.cpu[i].workload = multiprocesses[0]
     if options.checker:
-	system.cpu[i].addCheckerCpu()
+	    system.cpu[i].addCheckerCpu()
  
     system.cpu[i].createThreads()
 
-'''
-for i in xrange(np):
-    if options.smt:
-        system.cpu[i].workload = multiprocesses
-    elif len(multiprocesses) == 1:
-        system.cpu[i].workload = multiprocesses[0]
-    else:
-        system.cpu[i].workload = multiprocesses[i]
-
-    if options.fastmem:
-        system.cpu[i].fastmem = True
-
-    if options.simpoint_profile:
-        system.cpu[i].addSimPointProbe(options.simpoint_interval)
-
-    if options.checker:
-        system.cpu[i].addCheckerCpu()
-
-    system.cpu[i].createThreads()
-'''
 
 if options.ruby:
     if options.cpu_type == "atomic" or options.cpu_type == "AtomicSimpleCPU":
