@@ -33,11 +33,18 @@
 #include "mem/ruby/structures/DirectoryMemory.hh"
 #include "mem/ruby/system/RubySystem.hh"
 
+#include "debug/Hello.hh"
+
 using namespace std;
 
 int DirectoryMemory::m_num_directories = 0;
 int DirectoryMemory::m_num_directories_bits = 0;
 int DirectoryMemory::m_numa_high_bit = 0;
+int DirectoryMemory::dir_mp_src1=0;
+int DirectoryMemory::dir_mp_src2=3;
+int DirectoryMemory::dir_mp_mem1=12;
+int DirectoryMemory::dir_mp_mem2=15;
+int DirectoryMemory::dir_mp_default=5;
 
 DirectoryMemory::DirectoryMemory(const Params *p)
     : SimObject(p)
@@ -47,6 +54,13 @@ DirectoryMemory::DirectoryMemory(const Params *p)
     m_size_bits = floorLog2(m_size_bytes);
     m_num_entries = 0;
     m_numa_high_bit = p->numa_high_bit;
+    dir_mp_src1 = p->dir_mp_src1;
+    dir_mp_src2 = p->dir_mp_src2;
+    dir_mp_mem1 = p->dir_mp_mem1;
+    dir_mp_mem2 = p->dir_mp_mem2;
+    dir_mp_default = p->dir_mp_default;
+
+    DPRINTF(Hello, "Directory memory created: src_1 : %#i , mem_1 :%#i \n", dir_mp_src1, dir_mp_mem1);
 }
 
 void
@@ -94,17 +108,16 @@ DirectoryMemory::mapAddressToDirectoryVersion(Addr address)
 uint64_t
 DirectoryMemory::mapAddressToMemoryController(Addr address, int m_num_memories_bits, NodeID nodeID, MachineType m_type)
 {
-    uint64_t memoryControllers[] = {12, 15, 5};
     if (m_num_directories_bits == 0)
         return 0;
-    if (nodeID == 0) {
-	return memoryControllers[1];
+    if (nodeID == dir_mp_src1) {
+	    return dir_mp_mem1;
     }
-    else if (nodeID == 3) {
-	return memoryControllers[0];
+    else if (nodeID == dir_mp_src2) {
+	    return dir_mp_mem2;
     }
     else {
-        return memoryControllers[2];
+        return dir_mp_default;
     }
 }
 

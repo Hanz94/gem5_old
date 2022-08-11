@@ -83,6 +83,13 @@ class DirectoryMemory : public SimObject
     static int m_num_directories;
     static int m_num_directories_bits;
     static int m_numa_high_bit;
+
+    // new params for dedicated memory controller position
+    static int dir_mp_src1;
+    static int dir_mp_src2;
+    static int dir_mp_mem1;
+    static int dir_mp_mem2;
+    static int dir_mp_default;
 };
 
 inline std::ostream&

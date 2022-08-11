@@ -40,3 +40,8 @@ class RubyDirectoryMemory(SimObject):
     # the default value of the numa high bit is specified in the command line
     # option and must be passed into the directory memory sim object
     numa_high_bit = Param.Int("numa high bit")
+    dir_mp_src1 = Param.Int(0,"Source of 1st Directory Mapping")
+    dir_mp_src2 = Param.Int(3,"Source of 2nd Directory Mapping")
+    dir_mp_mem1 = Param.Int(12,"Memory Controller of 1st Directory Mapping")
+    dir_mp_mem2 = Param.Int(15,"Memory Controller of 2nd Directory Mapping")
+    dir_mp_default = Param.Int(5,"Memory Controller for default Directory Mapping")
