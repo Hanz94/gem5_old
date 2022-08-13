@@ -35,13 +35,14 @@ do
         fi
         for k in $( eval echo {0..$(($iterations-1))})
         do
+            export def_mc=$(( $RANDOM % $nodes + 0 ))
+            while [[ ($def_mc -eq $(($i))) || ($def_mc -eq $(($j))) ]]
+            do
+                export def_mc=$(( $RANDOM % $nodes + 0 ))
+            done
             export out_filename="${nodes}_${i}_${j}_${k}.txt" 
             ../build/X86/gem5.opt -d $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j} --debug-file=$out_filename --debug-flag=Hello ../configs/example/se_1core.py --dir-mp-src1=$i --dir-mp-mem1=$j --dir-mp-default=$def_mc --num-cpus=$nodes --num-dir=$nodes --cpu-type=timing --cpu-clock=2GHz --caches --l1d_size=1kB --l1i_size=1kB --l2cache --num-l2caches=16 --l2_size=8kB --mem-type=RubyMemoryControl --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=$rows --network=garnet2.0 --rel-max-tick=$simCycles -c '/gem5/gem5/dummy_pr;/gem5/gem5/FFT'
         done
-        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j}/fs
-        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j}/*.dot
-        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j}/*.pdf
-        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j}/*.svg
         rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j}/*.ini
         rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_FFT"/${i}_${j}/*.json
     done
