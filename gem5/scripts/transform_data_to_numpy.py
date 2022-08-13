@@ -1,3 +1,6 @@
+# TO RUN : refer example caommand below
+# python3 transform_data_to_numpy.py --no-of-nodes=64_nodes_85__0.001 --base-path=/home/hansika/gem5/gem5/scripts/ --cal-dir-path=calculated_test/ --rawd-dir-path=dummy_raw_data/ --numpy-dir-path=numpy_data_test/
+
 import glob
 import os
 import numpy as np
