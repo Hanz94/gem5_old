@@ -113,6 +113,11 @@ def process_ni_packet_count(frm, to, niPacketCount, no_of_nodes):
     else:
         niPacketCount[key] = 1
 
+# Example scenario for src=01 and des_mc=15 in 4x4 mesh
+# system.ruby.network.ext_links01.network_links0: Upstream: IPD: 5 :no of flits: 1 :vnet: 2 
+# system.ruby.network.ext_links31.network_links1: Downstream: IPD: 37 :no of flits: 1 :vnet: 2 
+# system.ruby.network.ext_links31.network_links0: Upstream: IPD: 72 :no of flits: 1 :vnet: 2
+# system.ruby.network.ext_links01.network_links1: Downstream: IPD: 97 :no of flits: 5 :vnet: 4 
 
 def process_flit_flow(link, stream, ipd, flitCount, up_flit_ipd, down_flit_ipd, no_of_nodes):
     link = remove_prefix(link, "system.ruby.network.ext_links")
