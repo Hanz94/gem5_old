@@ -82,12 +82,20 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nod
     cur_node_list.append(node3)
     node4 = generate_random(0, no_of_nodes - 1, cur_node_list)
 
-    convert_to_numpy_local(up_flit_ipd.get(node1), down_flit_ipd.get(node2 + no_of_nodes), 1, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node2), down_flit_ipd.get(node1 + no_of_nodes), 1, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node1), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node2 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node3), down_flit_ipd.get(node4 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
+    # THIS 6 LINES CONVET TRAFFIC OF OTHER WAY ROUND
+
+    # convert_to_numpy_local(up_flit_ipd.get(node1), down_flit_ipd.get(node2 + no_of_nodes), 1, numpy_for_dir, correlation_dir)
+    # convert_to_numpy_local(up_flit_ipd.get(node2), down_flit_ipd.get(node1 + no_of_nodes), 1, numpy_for_dir, correlation_dir)
+    # convert_to_numpy_local(up_flit_ipd.get(node1), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
+    # convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node2 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
+    # convert_to_numpy_local(up_flit_ipd.get(node3), down_flit_ipd.get(node4 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
+    # convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
+
+
+    convert_to_numpy_local(up_flit_ipd.get(node2 + no_of_nodes), down_flit_ipd.get(node1), 1, numpy_for_dir, correlation_dir)
+    convert_to_numpy_local(up_flit_ipd.get(node2 + no_of_nodes), down_flit_ipd.get(node3), 0, numpy_for_dir, correlation_dir)
+    convert_to_numpy_local(up_flit_ipd.get(node3 + no_of_nodes), down_flit_ipd.get(node4), 0, numpy_for_dir, correlation_dir)
+
 
 
 def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, correlation_dir):
@@ -157,6 +165,7 @@ def process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_fli
 
 
 def process_file(filename, numpy_for_dir, correlation_dir):
+    is_file_corrupted = False
     niPacketCount = {}
     flitCount = {}
     syntheticTrafficCount = {}
@@ -171,12 +180,19 @@ def process_file(filename, numpy_for_dir, correlation_dir):
         print("processing file from " + str(node1) + " to " + str(node2) + " in " + str(
             no_of_nodes) + " node environment")
         for line in f:
-            process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_flit_ipd, up_flit_ipd, no_of_nodes)
-    write_to_file(fileN, str(node1) + "_" + str(node2), syntheticTrafficCount, niPacketCount, flitCount)
-    if calculate_reduced:
-        convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir)
-    else:
-        convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir)
+            try:
+                process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_flit_ipd, up_flit_ipd, no_of_nodes)
+            except:
+                is_file_corrupted = True
+                break
+        if is_file_corrupted:
+            print("the file is corrupted")
+    if not is_file_corrupted:        
+        write_to_file(fileN, str(node1) + "_" + str(node2), syntheticTrafficCount, niPacketCount, flitCount)
+        if calculate_reduced:
+            convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir)
+        else:
+            convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir)
 
 
 def save_numpy_array(numpy_for_dir, correlation_dir, index):
