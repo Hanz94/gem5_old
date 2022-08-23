@@ -231,17 +231,37 @@ if options.simpoint_profile:
         fatal("SimPoint generation not supported with more than one CPUs")
 
 
-system.cpu[options.dir_mp_src1].workload = multiprocesses[0]
-# system.cpu[options.dir_mp_src2].workload = multiprocesses[1]
+# make entires in cores for source nodes
+cores = []
 
+for i in xrange(options.num_src_dst_pair):
+    src_node = 'dir_mp_src' + str(i+1)
+    cores.append(getattr(options, src_node))
+
+print (cores)
+
+core0 = 0
+dummy_pgm = True
+if core0 in cores: # if core0 is in cores list, we don't run dummy pgm
+    dummy_pgm = False
+
+j = 0
 for i in xrange(np):
-    if i == options.dir_mp_src1:
-	    system.cpu[i].workload = multiprocesses[0]
-        # print options.dir_mp_src1
-    elif i == options.dir_mp_src2 and len(multiprocesses) > 1:
-	    system.cpu[i].workload = multiprocesses[1]
+    if i not in cores:
+	if dummy_pgm: # core 0 is not in the source core list, hence run dummy pgm on core 0
+	    system.cpu[i].workload = multiprocesses[0] # dummy process is added to core 0 and appended to other cores which has no pgm running 
+	else:
+	    system.cpu[i].workload = multiprocesses[j]
     else:
-	    system.cpu[i].workload = multiprocesses[0]
+	j = j + 1
+	system.cpu[i].workload = multiprocesses[j]
+
+    if options.fastmem:
+	system.cpu[i].fastmem = True
+
+    if options.simpoint_profile:
+	system.cpu[i].addSimPointProbe(options.simpoint_interval)
+
     if options.checker:
 	    system.cpu[i].addCheckerCpu()
  
