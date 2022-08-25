@@ -40,6 +40,7 @@
 
 #include "mem/ruby/common/TypeDefines.hh" /// Rani
 #include "mem/protocol/MachineType.hh" /// Rani
+#include "base/random.hh"
 
 class DirectoryMemory : public SimObject
 {
@@ -88,7 +89,9 @@ class DirectoryMemory : public SimObject
     static int dir_mp_src1;
     static int dir_mp_src2;
     static int dir_mp_mem1;
-    static int dir_mp_mem2;
+    static int dir_mp_mem21;
+    static int dir_mp_mem22;
+    static int dir_mp_mem23;
     static int dir_mp_default;
 };
 

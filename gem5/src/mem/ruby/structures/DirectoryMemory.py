@@ -43,5 +43,7 @@ class RubyDirectoryMemory(SimObject):
     dir_mp_src1 = Param.Int(0,"Source of 1st Directory Mapping")
     dir_mp_src2 = Param.Int(3,"Source of 2nd Directory Mapping")
     dir_mp_mem1 = Param.Int(12,"Memory Controller of 1st Directory Mapping")
-    dir_mp_mem2 = Param.Int(15,"Memory Controller of 2nd Directory Mapping")
+    dir_mp_mem21 = Param.Int(13,"1st Memory Controller of 2nd Directory Mapping")
+    dir_mp_mem22 = Param.Int(-1,"2nd Memory Controller of 2nd Directory Mapping")
+    dir_mp_mem23 = Param.Int(-1,"3rd Memory Controller of 2nd Directory Mapping")
     dir_mp_default = Param.Int(5,"Memory Controller for default Directory Mapping")

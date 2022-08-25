@@ -127,6 +127,8 @@ def addNoISAOptions(parser):
                       "seconds")
     
     # newly introduced params for memory controller postioning (mapping of memcontoller based on source)
+    parser.add_option("--num-src-dst-pair", type="int", default=2,
+                      help="number of src and dst pairs to match")
     parser.add_option("--dir-mp-src1", type="int", default=0,
                       help="Source of 1st Directory Mapping")
     parser.add_option("--dir-mp-src2", type="int", default=3,
