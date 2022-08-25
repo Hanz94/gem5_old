@@ -264,7 +264,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         NodeID destID = dest_nodes[ctr];
 
         DPRINTF(Hello, "packet from: %#i : to: %#i \n", m_id, destID );
-
+        
         Message *new_net_msg_ptr = new_msg_ptr.get();
         if (dest_nodes.size() > 1) {
             NetDest personal_dest;
