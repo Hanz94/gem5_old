@@ -4,8 +4,10 @@ export iterations=$3
 export simCycles=$4
 export dest_folder=$5
 export benchmark=$6
+export benchmark2=$7
 
-echo "Running traffic corelation($benchmark benchmark) data for and rows : " $nodes " " $rows
+echo "Running traffic corelation($benchmark benchmark) data for and rows : " $nodes " " $rows 
+echo "Running $benchmark2 acessing 3 MCs."
 
 export is_apply_cf=false
 export cw=""
@@ -56,11 +58,11 @@ do
             do
                 export mem23=$(( $RANDOM % $nodes + 0 ))
             done
-            export out_filename="${nodes}_${i}_${j}_${k}.txt" 
-            ../build/X86/gem5.opt -d $dest_folder/"${nodes}_nodes_${cw}${delay}_${benchmark}"/${i}_${j} --debug-file=$out_filename --debug-flag=Hello ../configs/example/se_1core.py --dir-mp-src1=$i --dir-mp-mem1=$j --dir-mp-mem21=$mem21 --dir-mp-mem22=$mem22 --dir-mp-mem23=$mem23 --dir-mp-default=$def_mc --num-cpus=$nodes --num-dir=$nodes --cpu-type=timing --cpu-clock=2GHz --caches --l1d_size=1kB --l1i_size=1kB --l2cache --num-l2caches=16 --l2_size=8kB --mem-type=RubyMemoryControl --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=$rows --network=garnet2.0 --rel-max-tick=$simCycles -c "/gem5/gem5/dummy_pr;/gem5/gem5/benchmarks/${benchmark}"
+            export out_filename="${nodes}_${i}_${j}_${k}_${mem21}_${mem22}_${mem23}_${def_mc}.txt" 
+            ../build/X86/gem5.opt -d $dest_folder/"${nodes}_nodes_${cw}${delay}_${benchmark}_${benchmark2}"/${i}_${j} --debug-file=$out_filename --debug-flag=Hello ../configs/example/se_n_cores.py --num-src-dst-pair=2 --dir-mp-src1=$i --dir-mp-mem1=$j --dir-mp-mem21=$mem21 --dir-mp-mem22=$mem22 --dir-mp-mem23=$mem23 --dir-mp-default=$def_mc --num-cpus=$nodes --num-dir=$nodes --cpu-type=timing --cpu-clock=2GHz --caches --l1d_size=1kB --l1i_size=1kB --l2cache --num-l2caches=16 --l2_size=8kB --mem-type=RubyMemoryControl --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=$rows --network=garnet2.0 --rel-max-tick=$simCycles -c "/gem5/gem5/dummy_pr;/gem5/gem5/benchmarks/${benchmark};/gem5/gem5/benchmarks/${benchmark2}"
         done
-        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_${benchmark}"/${i}_${j}/*.ini
-        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_${benchmark}"/${i}_${j}/*.json
+        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_${benchmark}_${benchmark2}"/${i}_${j}/*.ini
+        rm -r $dest_folder/"${nodes}_nodes_${cw}${delay}_${benchmark}_${benchmark2}"/${i}_${j}/*.json
     done
 done
 
