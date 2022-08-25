@@ -8,7 +8,7 @@ import glob
 import os
 import numpy as np
 from random import randint
-import argparse, sys
+import argparse
 
 
 NUMBER_OF_NODES = "64_nodes_111"
@@ -71,17 +71,18 @@ def convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, nump
                 numpy_for_dir.append(np.array(flow_pair))
                 correlation_dir.append(correlation)
 
-def generate_random(range_start, range_end, exclude_list):
+
+def generate_random(range_start, range_end, exclude_list, up_flit_ipd, down_flit_ipd, no_of_nodes):
     rand_node = randint(range_start,range_end)
-    while(rand_node in exclude_list):
+    while(rand_node in exclude_list or up_flit_ipd.get(rand_node + no_of_nodes) == None or down_flit_ipd.get(rand_node) == None):
         rand_node = randint(range_start,range_end)
     return rand_node
 
 def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir):
     cur_node_list = [node1,node2]
-    node3 = generate_random(0, no_of_nodes - 1, cur_node_list) 
+    node3 = generate_random(0, no_of_nodes - 1, cur_node_list, up_flit_ipd, down_flit_ipd, no_of_nodes) 
     cur_node_list.append(node3)
-    node4 = generate_random(0, no_of_nodes - 1, cur_node_list)
+    node4 = generate_random(0, no_of_nodes - 1, cur_node_list, up_flit_ipd, down_flit_ipd, no_of_nodes)
 
     # THIS 6 LINES CONVET TRAFFIC OF OTHER WAY ROUND
 
@@ -98,7 +99,6 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nod
     convert_to_numpy_local(up_flit_ipd.get(node3 + no_of_nodes), down_flit_ipd.get(node4), 0, numpy_for_dir, correlation_dir)
 
 
-
 def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, correlation_dir):
     up_flow = np.array(up_value)
     down_flow = np.array(down_value)
@@ -107,6 +107,7 @@ def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, cor
     flow_pair = [up_flow, down_flow]
     numpy_for_dir.append(np.array(flow_pair))
     correlation_dir.append(correlation)
+
 
 def process_sythetic_traffic_count(frm, to, syntheticTrafficCount):
     key = frm + "->" + to
