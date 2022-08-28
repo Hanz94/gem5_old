@@ -7,12 +7,12 @@
 import glob
 import os
 import numpy as np
-from random import randint
+import random
 import argparse
 
 
-NUMBER_OF_NODES = "64_nodes_111"
-BASE_PATH = "/home/hansika/gem5/gem5/scripts/"
+NUMBER_OF_NODES = "64_nodes_hh"
+BASE_PATH = "/home/hansika/gem5_old/gem5/scripts/"
 CALCULATED_DIR_PATH = BASE_PATH + "calculated_test/"
 RAW_DATA_DIR_PATH = BASE_PATH + "dummy_raw_data/"
 NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data_test/"
@@ -72,17 +72,19 @@ def convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, nump
                 correlation_dir.append(correlation)
 
 
-def generate_random(range_start, range_end, exclude_list, up_flit_ipd, down_flit_ipd, no_of_nodes):
-    rand_node = randint(range_start,range_end)
-    while(rand_node in exclude_list or up_flit_ipd.get(rand_node + no_of_nodes) == None or down_flit_ipd.get(rand_node) == None):
-        rand_node = randint(range_start,range_end)
-    return rand_node
+def generate_random(exclude_list, up_flit_ipd, down_flit_ipd, no_of_nodes):
+    intersect_keys = list(set(down_flit_ipd.keys()) & set(up_flit_ipd.keys()))
+    intersect_keys = [e for e in intersect_keys if e not in exclude_list]
+    if len(intersect_keys) == 0:
+        return None
+    return random.choice(intersect_keys)
+
 
 def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir):
     cur_node_list = [node1,node2]
-    node3 = generate_random(0, no_of_nodes - 1, cur_node_list, up_flit_ipd, down_flit_ipd, no_of_nodes) 
+    node3 = generate_random(cur_node_list, up_flit_ipd, down_flit_ipd, no_of_nodes) 
     cur_node_list.append(node3)
-    node4 = generate_random(0, no_of_nodes - 1, cur_node_list, up_flit_ipd, down_flit_ipd, no_of_nodes)
+    node4 = generate_random(cur_node_list, up_flit_ipd, down_flit_ipd, no_of_nodes)
 
     # THIS 6 LINES CONVET TRAFFIC OF OTHER WAY ROUND
 
@@ -93,10 +95,12 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nod
     # convert_to_numpy_local(up_flit_ipd.get(node3), down_flit_ipd.get(node4 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
     # convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
 
-
-    convert_to_numpy_local(up_flit_ipd.get(node2 + no_of_nodes), down_flit_ipd.get(node1), 1, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node2 + no_of_nodes), down_flit_ipd.get(node3), 0, numpy_for_dir, correlation_dir)
-    convert_to_numpy_local(up_flit_ipd.get(node3 + no_of_nodes), down_flit_ipd.get(node4), 0, numpy_for_dir, correlation_dir)
+    if node3 != None and node4 != None: 
+        convert_to_numpy_local(up_flit_ipd.get(node2 + no_of_nodes), down_flit_ipd.get(node1), 1, numpy_for_dir, correlation_dir)
+        convert_to_numpy_local(up_flit_ipd.get(node2 + no_of_nodes), down_flit_ipd.get(node3), 0, numpy_for_dir, correlation_dir)
+        convert_to_numpy_local(up_flit_ipd.get(node3), down_flit_ipd.get(node4), 0, numpy_for_dir, correlation_dir)
+    else:
+        print("skipping this combination becuase no other node flow is found")
 
 
 def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, correlation_dir):
