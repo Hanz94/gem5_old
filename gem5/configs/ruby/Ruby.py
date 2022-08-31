@@ -80,14 +80,12 @@ def define_options(parser):
     # newly introduced params for memory controller postioning (mapping of memcontoller based on source)
     parser.add_option("--dir-mp-mem1", type="int", default=12,
                       help="Memory Controller of 1st Directory Mapping")
-    parser.add_option("--dir-mp-mem21", type="int", default=13,
-                      help="1st Memory Controller of 2nd Directory Mapping")                  
-    parser.add_option("--dir-mp-mem22", type="int", default=-1,
-                      help="2nd Memory Controller of 2nd Directory Mapping (must include 3rd otherwise this is ignored)")
-    parser.add_option("--dir-mp-mem23", type="int", default=-1,
-                      help="3rd Memory Controller of 2nd Directory Mapping (must include 2nd otherwise this is ignored)")
+    parser.add_option("--dir-mp-mem2", type="int", default=13,
+                      help="Memory Controller of 2nd Directory Mapping")                  
     parser.add_option("--dir-mp-default", type="int", default=5,
                       help=" default Directory Mapping")
+    parser.add_option("--dir-mp-noise-ratio", type="int", default=0,
+                      help="noice for first pair of communication")  
 
     protocol = buildEnv['PROTOCOL']
     exec "import %s" % protocol
@@ -123,10 +121,9 @@ def setup_memory_controllers(system, ruby, dir_cntrls, options):
         dir_cntrl.directory.dir_mp_src1 = options.dir_mp_src1
         dir_cntrl.directory.dir_mp_src2 = options.dir_mp_src2
         dir_cntrl.directory.dir_mp_mem1 = options.dir_mp_mem1
-        dir_cntrl.directory.dir_mp_mem21 = options.dir_mp_mem21
-        dir_cntrl.directory.dir_mp_mem22 = options.dir_mp_mem22
-        dir_cntrl.directory.dir_mp_mem23 = options.dir_mp_mem23
+        dir_cntrl.directory.dir_mp_mem2 = options.dir_mp_mem2
         dir_cntrl.directory.dir_mp_default = options.dir_mp_default
+        dir_cntrl.directory.dir_mp_noise_ratio = options.dir_mp_noise_ratio
 
 
         crossbar = None

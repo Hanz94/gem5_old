@@ -247,6 +247,7 @@ print(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/")
 create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES_OUT)
 create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES_OUT +"/X")
 create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES_OUT +"/Y")
+print("No of sub_dirs : " + str(len(list_subdir_with_paths)))
 
 numpy_for_dir = []
 correlation_dir = []

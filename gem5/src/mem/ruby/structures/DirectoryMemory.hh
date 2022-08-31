@@ -89,10 +89,12 @@ class DirectoryMemory : public SimObject
     static int dir_mp_src1;
     static int dir_mp_src2;
     static int dir_mp_mem1;
-    static int dir_mp_mem21;
-    static int dir_mp_mem22;
-    static int dir_mp_mem23;
+    static int dir_mp_mem2;
     static int dir_mp_default;
+    static int dir_mp_noise_ratio;
+    static uint64_t dir_mp_src1_mem1_rqst_cnt;
+    static uint64_t dir_mp_src2_mem1_rqst_cnt;
+    static uint64_t dir_mp_src2_mem2_rqst_cnt;
 };
 
 inline std::ostream&

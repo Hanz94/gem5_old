@@ -43,10 +43,13 @@ int DirectoryMemory::m_numa_high_bit = 0;
 int DirectoryMemory::dir_mp_src1=0;
 int DirectoryMemory::dir_mp_src2=3;
 int DirectoryMemory::dir_mp_mem1=12;
-int DirectoryMemory::dir_mp_mem21=13;
-int DirectoryMemory::dir_mp_mem22=-1;
-int DirectoryMemory::dir_mp_mem23=-1;
+int DirectoryMemory::dir_mp_mem2=13;
 int DirectoryMemory::dir_mp_default=5;
+int DirectoryMemory::dir_mp_noise_ratio = 0;
+uint64_t DirectoryMemory::dir_mp_src1_mem1_rqst_cnt = 0;
+uint64_t DirectoryMemory::dir_mp_src2_mem1_rqst_cnt = 0; // only for debug purpose
+uint64_t DirectoryMemory::dir_mp_src2_mem2_rqst_cnt = 0; // only for debug purpose
+
 
 DirectoryMemory::DirectoryMemory(const Params *p)
     : SimObject(p)
@@ -59,12 +62,11 @@ DirectoryMemory::DirectoryMemory(const Params *p)
     dir_mp_src1 = p->dir_mp_src1;
     dir_mp_src2 = p->dir_mp_src2;
     dir_mp_mem1 = p->dir_mp_mem1;
-    dir_mp_mem21 = p->dir_mp_mem21;
-    dir_mp_mem22 = p->dir_mp_mem22;
-    dir_mp_mem23 = p->dir_mp_mem23;
+    dir_mp_mem2 = p->dir_mp_mem2;
     dir_mp_default = p->dir_mp_default;
+    dir_mp_noise_ratio = ceil(100/p->dir_mp_noise_ratio);
 
-    DPRINTF(Hello, "Directory memory created: src_1 : %#i , mem_1 :%#i \n", dir_mp_src1, dir_mp_mem1);
+    DPRINTF(Hello, "Directory memory created: src_1 : %#i , mem_1 :%#i, noise_ratio : %#i \n", dir_mp_src1, dir_mp_mem1, dir_mp_noise_ratio);
 }
 
 void
@@ -108,32 +110,24 @@ DirectoryMemory::mapAddressToDirectoryVersion(Addr address)
     return ret;
 }
 
-//subodha : map given address to memory controller // Rani
+
 uint64_t
 DirectoryMemory::mapAddressToMemoryController(Addr address, int m_num_memories_bits, NodeID nodeID, MachineType m_type)
 {
     if (m_num_directories_bits == 0)
         return 0;
     if (nodeID == dir_mp_src1) {
+        dir_mp_src1_mem1_rqst_cnt++;
 	    return dir_mp_mem1;
     }
     else if (nodeID == dir_mp_src2) {
-        if (dir_mp_mem22 == -1 || dir_mp_mem23 == -1){
-            return dir_mp_mem21;
+        if (dir_mp_noise_ratio > 0 && dir_mp_src1_mem1_rqst_cnt % (dir_mp_noise_ratio - 1) == 0)
+	    {
+            return dir_mp_mem1;
         }
         else{
-            int result = address % 3;
-            if(result == 0){
-                return dir_mp_mem21;
-            } 
-            else if (result == 1){
-                return dir_mp_mem22;
-            }
-            else{
-                return dir_mp_mem23;
-            }
+            return dir_mp_mem2;
         }
-	    
     }
     else {
         return dir_mp_default;
