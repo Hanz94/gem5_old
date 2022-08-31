@@ -58,7 +58,7 @@ def isCorrelated(src1, mem1, up_key, down_key, no_of_nodes):
     return x
 
 
-def convert_to_numpy(up_flit_ipd, down_flit_ipd, src1, mem1, no_of_nodes, numpy_for_dir, correlation_dir):
+def convert_to_numpy(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2, def_mem, no_of_nodes, numpy_for_dir, correlation_dir:
     for up_key, up_value in up_flit_ipd.items():
         for down_key, down_value in down_flit_ipd.items():
             if up_key != down_key - no_of_nodes:
@@ -88,19 +88,17 @@ def get_src2(exclude_list, down_flit_ipd):
     return src2_list[0]
 
 
-def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, mem21, mem22, mem23, def_mem, no_of_nodes, numpy_for_dir, correlation_dir):
-    cur_node_list = [0,src1, mem1, mem21, mem22, mem23, def_mem]
-    src2 = get_src2(cur_node_list, down_flit_ipd)
+def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2, def_mem, no_of_nodes, numpy_for_dir, correlation_dir:
     if down_flit_ipd.get(src1) != None and up_flit_ipd.get(mem1 + no_of_nodes) != None: 
         convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir, correlation_dir)
-        if up_flit_ipd.get(mem22 + no_of_nodes) != None:
-            convert_to_numpy_local(up_flit_ipd.get(mem22 + no_of_nodes), down_flit_ipd.get(src1), 0, numpy_for_dir, correlation_dir)
-        if src2 != None:
+        if up_flit_ipd.get(mem2 + no_of_nodes) != None:
+            convert_to_numpy_local(up_flit_ipd.get(mem2 + no_of_nodes), down_flit_ipd.get(src1), 0, numpy_for_dir, correlation_dir)
+        if down_flit_ipd.get(src2) != None:
             convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src2), 0, numpy_for_dir, correlation_dir)
             if up_flit_ipd.get(def_mem + no_of_nodes) != None:
                 convert_to_numpy_local(up_flit_ipd.get(def_mem + no_of_nodes), down_flit_ipd.get(src2), 0, numpy_for_dir, correlation_dir)
-            elif up_flit_ipd.get(mem23 + no_of_nodes) != None:
-                convert_to_numpy_local(up_flit_ipd.get(mem23 + no_of_nodes), down_flit_ipd.get(src1), 0, numpy_for_dir, correlation_dir)
+        elif src1 != 0 and src2 !=0 and down_flit_ipd.get(0) != None:
+            convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(0), 0, numpy_for_dir, correlation_dir)
     else:
         print("skipping this combination becuase no other node flow is found")
 
@@ -185,12 +183,11 @@ def process_file(filename, numpy_for_dir, correlation_dir):
         no_of_nodes = int(file[0])
         src1 = int(file[1])
         mem1 = int(file[2])
-        mem21 = int(file[4])
-        mem22 = int(file[5])
-        mem23 = int(file[6])
-        def_mem = int(file[7].split(".")[0])
+        src2 = int(file[4])
+        mem2 = int(file[5])
+        def_mem = int(file[6].split(".")[0])
         print("processing file from " + str(src1) + " to " + str(mem1) + " in " + str(
-            no_of_nodes) + " node environment while src2 communicate with" + str(mem21) + "," + str(mem22) + "," + str(mem23) + ", default mem : " + str(def_mem))
+            no_of_nodes) + " node environment while" + str(src2) + "communicate with" + str(mem2) + ", default mem : " + str(def_mem))
         for line in f:
             try:
                 process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_flit_ipd, up_flit_ipd, no_of_nodes)
@@ -202,9 +199,9 @@ def process_file(filename, numpy_for_dir, correlation_dir):
     if not is_file_corrupted:        
         write_to_file(fileN, str(src1) + "_" + str(mem1), syntheticTrafficCount, niPacketCount, flitCount)
         if calculate_reduced:
-            convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, mem21, mem22, mem23, def_mem, no_of_nodes, numpy_for_dir, correlation_dir)
+            convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2, def_mem, no_of_nodes, numpy_for_dir, correlation_dir)
         else:
-            convert_to_numpy(up_flit_ipd, down_flit_ipd, src1, mem1, mem21, mem22, mem23, def_mem, no_of_nodes, numpy_for_dir, correlation_dir)
+            convert_to_numpy(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2, def_mem, no_of_nodes, numpy_for_dir, correlation_dir)
 
 
 def save_numpy_array(numpy_for_dir, correlation_dir, index):
