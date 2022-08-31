@@ -32,22 +32,22 @@ def remove_prefix(text, prefix):
     return text
 
 
-def write_to_file(file, dirr, traffic_count, niPacketCount, flitCount):
+def write_to_file(file, dirr, traffic_count, ni_packet_count, flit_count):
     with open(CALCULATED_DIR_PATH + NUMBER_OF_NODES_OUT + "/" + dirr + "/" + file, 'w') as f:
         f.write("----synthetic traffic generation count---- \n")
         for key, value in traffic_count.items():
             f.write("%s : %s\n" % (key, value))
         f.write("\n")
         f.write("----packet count on network interface---- \n")
-        for key, value in niPacketCount.items():
+        for key, value in ni_packet_count.items():
             f.write("%s : %s\n" % (key, value))
         f.write("\n")
         f.write("----flit count on network link---- \n")
-        for key, value in flitCount.items():
+        for key, value in flit_count.items():
             f.write("%s : %s\n" % (key, value))
 
 
-def isCorrelated(src1, mem1, up_key, down_key, no_of_nodes):
+def is_correlated(src1, mem1, up_key, down_key, no_of_nodes):
     if src1 == up_key and mem1 == down_key - no_of_nodes:
         x = 1
     elif mem1 == up_key and src1 == down_key - no_of_nodes:
@@ -61,7 +61,7 @@ def convert_to_numpy(up_flit_ipd, down_flit_ipd, src1, mem1, no_of_nodes, numpy_
     for up_key, up_value in up_flit_ipd.items():
         for down_key, down_value in down_flit_ipd.items():
             if up_key != down_key - no_of_nodes:
-                correlation = isCorrelated(src1, mem1, up_key, down_key, no_of_nodes)
+                correlation = is_correlated(src1, mem1, up_key, down_key, no_of_nodes)
                 up_flow = np.array(up_value)
                 down_flow = np.array(down_value)
                 up_flow.resize(MIN_MAX_LENGTH, refcheck=False)
@@ -88,19 +88,19 @@ def get_src2(exclude_list, down_flit_ipd):
 
 
 def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2, def_mem, no_of_nodes, numpy_for_dir, correlation_dir):
-    if down_flit_ipd.get(src1) != None and up_flit_ipd.get(mem1 + no_of_nodes) != None:
+    if down_flit_ipd.get(src1) is not None and up_flit_ipd.get(mem1 + no_of_nodes) is not None:
         convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir,
                                correlation_dir)
-        if up_flit_ipd.get(mem2 + no_of_nodes) != None:
+        if up_flit_ipd.get(mem2 + no_of_nodes) is not None:
             convert_to_numpy_local(up_flit_ipd.get(mem2 + no_of_nodes), down_flit_ipd.get(src1), 0, numpy_for_dir,
                                    correlation_dir)
-        if down_flit_ipd.get(src2) != None:
+        if down_flit_ipd.get(src2) is not None:
             convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src2), 0, numpy_for_dir,
                                    correlation_dir)
-            if up_flit_ipd.get(def_mem + no_of_nodes) != None:
+            if up_flit_ipd.get(def_mem + no_of_nodes) is not None:
                 convert_to_numpy_local(up_flit_ipd.get(def_mem + no_of_nodes), down_flit_ipd.get(src2), 0,
                                        numpy_for_dir, correlation_dir)
-        elif src1 != 0 and src2 != 0 and down_flit_ipd.get(0) != None:
+        elif src1 != 0 and src2 != 0 and down_flit_ipd.get(0) is not None:
             convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(0), 0, numpy_for_dir,
                                    correlation_dir)
     else:
@@ -117,7 +117,7 @@ def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, cor
     correlation_dir.append(correlation)
 
 
-def process_sythetic_traffic_count(frm, to, synthetic_traffic_count):
+def process_traffic_count(frm, to, synthetic_traffic_count):
     key = frm + "->" + to
     if key in synthetic_traffic_count:
         synthetic_traffic_count[key] += 1
@@ -125,16 +125,16 @@ def process_sythetic_traffic_count(frm, to, synthetic_traffic_count):
         synthetic_traffic_count[key] = 1
 
 
-def process_ni_packet_count(frm, to, niPacketCount, no_of_nodes):
+def process_ni_packet_count(frm, to, ni_packet_count, no_of_nodes):
     if int(to) >= no_of_nodes:
         to_node = int(to) - no_of_nodes
     else:
         to_node = int(to)
     key = frm + "->" + to + "(" + str(to_node) + ")"
-    if key in niPacketCount:
-        niPacketCount[key] += 1
+    if key in ni_packet_count:
+        ni_packet_count[key] += 1
     else:
-        niPacketCount[key] = 1
+        ni_packet_count[key] = 1
 
 
 # Example scenario for src=01 and des_mc=15 in 4x4 mesh
@@ -143,43 +143,43 @@ def process_ni_packet_count(frm, to, niPacketCount, no_of_nodes):
 # system.ruby.network.ext_links31.network_links0: Upstream: IPD: 72 :no of flits: 1 :vnet: 2
 # system.ruby.network.ext_links01.network_links1: Downstream: IPD: 97 :no of flits: 5 :vnet: 4 
 
-def process_flit_flow(link, stream, ipd, flitCount, up_flit_ipd, down_flit_ipd, no_of_nodes):
+def process_flit_flow(link, stream, ipd, flit_count, up_flit_ipd, down_flit_ipd, no_of_nodes):
     link = remove_prefix(link, "system.ruby.network.ext_links")
     link = link.split(".")[0]
     key = "link_" + link + "_" + stream
     ipd = int(ipd)
     link = int(link)
     if stream == "Upstream":
-        if key in flitCount:
+        if key in flit_count:
             up_flit_ipd[link].append(ipd)
-            flitCount[key] += 1
+            flit_count[key] += 1
         else:
             up_flit_ipd[link] = [ipd]
-            flitCount[key] = 1
+            flit_count[key] = 1
     else:
-        if key in flitCount:
+        if key in flit_count:
             down_flit_ipd[link].append(ipd)
-            flitCount[key] += 1
+            flit_count[key] += 1
         else:
             down_flit_ipd[link] = [ipd]
-            flitCount[key] = 1
+            flit_count[key] = 1
 
 
-def process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_flit_ipd, up_flit_ipd, no_of_nodes):
+def process_line(line, ni_packet_count, traffic_count, flit_count, down_flit_ipd, up_flit_ipd, no_of_nodes):
     y = [x.strip() for x in line.split(':')]
     if y[1].startswith("system.cpu"):
-        process_sythetic_traffic_count(y[3], y[5], syntheticTrafficCount)
+        process_traffic_count(y[3], y[5], traffic_count)
     elif y[1].startswith("system.ruby.network.netifs"):
-        process_ni_packet_count(y[3], y[5], niPacketCount, no_of_nodes)
+        process_ni_packet_count(y[3], y[5], ni_packet_count, no_of_nodes)
     elif y[1].startswith("system.ruby.network.ext_links"):
-        process_flit_flow(y[1], y[2], y[4], flitCount, up_flit_ipd, down_flit_ipd, no_of_nodes)
+        process_flit_flow(y[1], y[2], y[4], flit_count, up_flit_ipd, down_flit_ipd, no_of_nodes)
 
 
 def process_file(filename, numpy_for_dir, correlation_dir):
     is_file_corrupted = False
-    niPacketCount = {}
-    flitCount = {}
-    syntheticTrafficCount = {}
+    ni_packet_count = {}
+    flit_count = {}
+    traffic_count = {}
     down_flit_ipd = {}
     up_flit_ipd = {}
     with open(os.path.join(os.getcwd(), filename), 'r') as f:  # open in readonly mode
@@ -196,7 +196,7 @@ def process_file(filename, numpy_for_dir, correlation_dir):
             mem2) + ", default mem : " + str(def_mem))
         for line in f:
             try:
-                process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_flit_ipd, up_flit_ipd,
+                process_line(line, ni_packet_count, traffic_count, flit_count, down_flit_ipd, up_flit_ipd,
                              no_of_nodes)
             except:
                 is_file_corrupted = True
@@ -204,7 +204,7 @@ def process_file(filename, numpy_for_dir, correlation_dir):
         if is_file_corrupted:
             print("the file is corrupted")
     if not is_file_corrupted:
-        write_to_file(fileN, str(src1) + "_" + str(mem1), syntheticTrafficCount, niPacketCount, flitCount)
+        write_to_file(fileN, str(src1) + "_" + str(mem1), traffic_count, ni_packet_count, flit_count)
         if calculate_reduced:
             convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2, def_mem, no_of_nodes,
                                      numpy_for_dir, correlation_dir)
@@ -228,17 +228,17 @@ parser.add_argument('--min-max-length', help='min max length of the IFD array')
 
 args = parser.parse_args()
 
-if args.no_of_nodes != None:
+if args.no_of_nodes is not None:
     NUMBER_OF_NODES = args.no_of_nodes
-if args.base_path != None:
+if args.base_path is not None:
     BASE_PATH = args.base_path
-if args.cal_dir_path != None:
+if args.cal_dir_path is not None:
     CALCULATED_DIR_PATH = BASE_PATH + args.cal_dir_path
-if args.rawd_dir_path != None:
+if args.rawd_dir_path is not None:
     RAW_DATA_DIR_PATH = BASE_PATH + args.rawd_dir_path
-if args.numpy_dir_path != None:
+if args.numpy_dir_path is not None:
     NUMPY_DATA_DIR_PATH = BASE_PATH + args.numpy_dir_path
-if args.min_max_length != None:
+if args.min_max_length is not None:
     MIN_MAX_LENGTH = int(args.min_max_length)
 
 if calculate_reduced:
