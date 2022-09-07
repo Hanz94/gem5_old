@@ -36,6 +36,7 @@
 #include "mem/ruby/network/garnet2.0/CreditLink.hh"
 
 #include "debug/Hello.hh"
+#include "base/random.hh"
 
 NetworkLink::NetworkLink(const Params *p)
     : ClockedObject(p), Consumer(this), m_id(p->link_id),
@@ -75,14 +76,20 @@ NetworkLink::wakeup()
         if(t_flit->get_vnet() == 4){
             int ipd = t_flit->get_time() - previous_flit_recived_time;
             if(m_type == EXT_IN_){
-                // DPRINTF(Hello, "Upstream: IPD: %#i :no of flits: %#i :vnet: %#i \n", ipd,t_flit->get_size(), t_flit->get_vnet());
                 DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
             }
             else if(m_type == EXT_OUT_){
-                // DPRINTF(Hello, "Downstream: IPD: %#i :no of flits: %#i :vnet: %#i \n", ipd, t_flit->get_size(), t_flit->get_vnet());
                 DPRINTF(Hello, "Downstream: IPD: %#i \n", ipd);
             }
             previous_flit_recived_time = t_flit->get_time();
+        }
+        else if(m_type == EXT_IN_ && t_flit->get_size() == 1){
+            int rand_num = random_mt.random<unsigned>(0, 100);
+            if(rand_num < 50){
+                int ipd = t_flit->get_time() - previous_flit_recived_time;
+                DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
+                previous_flit_recived_time = t_flit->get_time();
+            }
         }
         link_consumer->scheduleEventAbsolute(clockEdge(m_latency));
         m_link_utilized++;
