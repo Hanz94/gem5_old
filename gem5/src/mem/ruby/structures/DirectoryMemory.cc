@@ -64,7 +64,9 @@ DirectoryMemory::DirectoryMemory(const Params *p)
     dir_mp_mem1 = p->dir_mp_mem1;
     dir_mp_mem2 = p->dir_mp_mem2;
     dir_mp_default = p->dir_mp_default;
-    dir_mp_noise_ratio = ceil(100/p->dir_mp_noise_ratio);
+    if(dir_mp_noise_ratio > 0){
+         dir_mp_noise_ratio = ceil(100/p->dir_mp_noise_ratio);
+    }
 
     DPRINTF(Hello, "Directory memory created: src_1 : %#i , mem_1 :%#i, noise_ratio : %#i \n", dir_mp_src1, dir_mp_mem1, dir_mp_noise_ratio);
 }
