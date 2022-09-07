@@ -96,4 +96,4 @@ Random::unserialize(CheckpointIn &cp)
     }
 }
 
-Random random_mt;
+Random random_mt = Random((unsigned int)time(NULL));
