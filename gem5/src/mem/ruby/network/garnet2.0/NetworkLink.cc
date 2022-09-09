@@ -82,7 +82,7 @@ NetworkLink::wakeup()
                     int rand_num = random_mt.random<unsigned>(0, 100);
                     if(rand_num < 50){
                         int dummy_ipd = random_mt.random<unsigned>(1, min(ipd,6));
-                        DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - dummy_ipd);
+                        DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd - dummy_ipd);
                         ipd = dummy_ipd;
                     }
                 }
