@@ -38,6 +38,8 @@
 #include "debug/Hello.hh"
 #include "base/random.hh"
 
+using namespace std;
+
 NetworkLink::NetworkLink(const Params *p)
     : ClockedObject(p), Consumer(this), m_id(p->link_id),
       m_type(NUM_LINK_TYPES_),
@@ -76,20 +78,20 @@ NetworkLink::wakeup()
         if(t_flit->get_vnet() == 4){
             int ipd = t_flit->get_time() - previous_flit_recived_time;
             if(m_type == EXT_IN_){
+                if(t_flit->get_type() == HEAD_){
+                    int rand_num = random_mt.random<unsigned>(0, 100);
+                    if(rand_num < 50){
+                        int dummy_ipd = random_mt.random<unsigned>(1, min(ipd,6));
+                        DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - dummy_ipd);
+                        ipd = dummy_ipd;
+                    }
+                }
                 DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
             }
             else if(m_type == EXT_OUT_){
                 DPRINTF(Hello, "Downstream: IPD: %#i \n", ipd);
             }
             previous_flit_recived_time = t_flit->get_time();
-        }
-        else if(m_type == EXT_IN_ && t_flit->get_size() == 1){
-            int rand_num = random_mt.random<unsigned>(0, 100);
-            if(rand_num < 50){
-                int ipd = t_flit->get_time() - previous_flit_recived_time;
-                DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
-                previous_flit_recived_time = t_flit->get_time();
-            }
         }
         link_consumer->scheduleEventAbsolute(clockEdge(m_latency));
         m_link_utilized++;
