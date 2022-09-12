@@ -80,7 +80,7 @@ NetworkLink::wakeup()
             if(m_type == EXT_IN_){
                 if(t_flit->get_type() == HEAD_){
                     int rand_num = random_mt.random<unsigned>(1, 100);
-                    if(rand_num < 40){
+                    if(rand_num < 50){
                         if(ipd > 50){
                             int no_of_dummy_flits = random_mt.random<unsigned>(3, 5);
                             int dummy_affinity = random_mt.random<unsigned>(1, 10);
