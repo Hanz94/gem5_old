@@ -79,14 +79,44 @@ NetworkLink::wakeup()
             int ipd = t_flit->get_time() - previous_flit_recived_time;
             if(m_type == EXT_IN_){
                 if(t_flit->get_type() == HEAD_){
-                    int rand_num = random_mt.random<unsigned>(0, 100);
-                    if(rand_num < 50){
-                        int dummy_ipd = random_mt.random<unsigned>(1, min(ipd,6));
-                        DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd - dummy_ipd);
-                        ipd = dummy_ipd;
+                    int rand_num = random_mt.random<unsigned>(1, 100);
+                    if(rand_num < 40){
+                        if(ipd > 50){
+                            int no_of_dummy_flits = random_mt.random<unsigned>(3, 5);
+                            int dummy_affinity = random_mt.random<unsigned>(1, 10);
+                            int dummy_cum_ipd = 0;
+                            if(dummy_affinity % 2 == 0){
+                                for (int i = 0; i < no_of_dummy_flits; i++) {
+                                    int dummy_ipd = random_mt.random<unsigned>(1, 5);
+                                    dummy_cum_ipd = dummy_cum_ipd + dummy_ipd;
+                                    DPRINTF(Hello, "New Upstream: IPD: %#i \n", dummy_ipd);
+                                }
+                                DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - dummy_cum_ipd);
+                            }
+                            else{
+                                std::vector< int > ipd_arr;
+                                for (int i = 0; i < no_of_dummy_flits; i++) {
+                                    int dummy_ipd = random_mt.random<unsigned>(1, 5);
+                                    dummy_cum_ipd = dummy_cum_ipd + dummy_ipd;
+                                    ipd_arr.push_back(dummy_ipd);
+                                }
+                                DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - dummy_cum_ipd);
+                                for(auto item: ipd_arr){
+                                     DPRINTF(Hello, "New Upstream: IPD: %#i \n", item);
+                                }
+                            }
+                            
+                        } else{
+                                int dummy_ipd = random_mt.random<unsigned>(1, max(5,ipd));
+                                DPRINTF(Hello, "New Upstream: IPD: %#i \n", dummy_ipd);
+                                DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd - dummy_ipd);
+                        }
+                    }else{
+                        DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
                     }
+                } else{
+                    DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
                 }
-                DPRINTF(Hello, "Upstream: IPD: %#i \n", ipd);
             }
             else if(m_type == EXT_OUT_){
                 DPRINTF(Hello, "Downstream: IPD: %#i \n", ipd);
