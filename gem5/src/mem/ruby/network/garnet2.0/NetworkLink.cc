@@ -80,23 +80,22 @@ NetworkLink::wakeup()
             if(m_type == EXT_IN_){
                 if(t_flit->get_type() == HEAD_){
                     int rand_num = random_mt.random<unsigned>(1, 100);
-                    if(rand_num < 50){
+                    if(rand_num < 40){
                         if(ipd > 50){
-                            int no_of_dummy_flits = random_mt.random<unsigned>(3, 5);
-                            int dummy_affinity = random_mt.random<unsigned>(1, 10);
+                            int dummy_affinity = random_mt.random<unsigned>(1, 16);
                             int dummy_cum_ipd = 0;
-                            if(dummy_affinity % 2 == 0){
-                                for (int i = 0; i < no_of_dummy_flits; i++) {
-                                    int dummy_ipd = random_mt.random<unsigned>(1, 5);
+                            if(dummy_affinity % 8 == 0){
+                                for (int i = 0; i < 3; i++) {
+                                    int dummy_ipd = random_mt.random<unsigned>(1, 4);
                                     dummy_cum_ipd = dummy_cum_ipd + dummy_ipd;
                                     DPRINTF(Hello, "New Upstream: IPD: %#i \n", dummy_ipd);
                                 }
                                 DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - dummy_cum_ipd);
                             }
-                            else{
+                            else if(dummy_affinity % 8 == 1){
                                 std::vector< int > ipd_arr;
-                                for (int i = 0; i < no_of_dummy_flits; i++) {
-                                    int dummy_ipd = random_mt.random<unsigned>(1, 5);
+                                for (int i = 0; i < 3; i++) {
+                                    int dummy_ipd = random_mt.random<unsigned>(1, 4);
                                     dummy_cum_ipd = dummy_cum_ipd + dummy_ipd;
                                     ipd_arr.push_back(dummy_ipd);
                                 }
@@ -105,7 +104,19 @@ NetworkLink::wakeup()
                                      DPRINTF(Hello, "New Upstream: IPD: %#i \n", item);
                                 }
                             }
-                            
+                            else{
+                                std::vector< int > ipd_arr;
+                                for (int i = 0; i < 5; i++) {
+                                    int dummy_ipd = random_mt.random<unsigned>(1, 4);
+                                    dummy_cum_ipd = dummy_cum_ipd + dummy_ipd;
+                                    ipd_arr.push_back(dummy_ipd);
+                                }
+                                DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - 10);
+                                for (int i = 0; i < 4; i++){
+                                     DPRINTF(Hello, "New Upstream: IPD: %#i \n", item);
+                                }
+                                DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd/2 + 10 - dummy_cum_ipd);
+                            }
                         } else{
                                 int dummy_ipd = random_mt.random<unsigned>(1, max(5,ipd));
                                 DPRINTF(Hello, "New Upstream: IPD: %#i \n", dummy_ipd);
