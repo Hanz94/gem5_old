@@ -113,7 +113,7 @@ NetworkLink::wakeup()
                                 }
                                 DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd - 10);
                                 for (int i = 0; i < 4; i++){
-                                     DPRINTF(Hello, "New Upstream: IPD: %#i \n", item);
+                                     DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd_arr[i]);
                                 }
                                 DPRINTF(Hello, "New Upstream: IPD: %#i \n", ipd/2 + 10 - dummy_cum_ipd);
                             }
