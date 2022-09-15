@@ -17,7 +17,7 @@ RAW_DATA_DIR_PATH = BASE_PATH + "raw_data/"
 NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data_test/"
 
 NUM_ITERATIONS_PER_FILE = 100
-MIN_MAX_LENGTH = 450
+MIN_MAX_LENGTH = 250
 calculate_reduced = True
 
 
@@ -91,6 +91,9 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2,
     if down_flit_ipd.get(src1) is not None and up_flit_ipd.get(mem1 + no_of_nodes) is not None:
         convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir,
                                correlation_dir)
+        if len(up_flit_ipd.get(mem1 + no_of_nodes)) > 2*MIN_MAX_LENGTH and len(down_flit_ipd.get(src1)) >  2*MIN_MAX_LENGTH:
+            convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir,
+                               correlation_dir, True)
         if up_flit_ipd.get(mem2 + no_of_nodes) is not None:
             convert_to_numpy_local(up_flit_ipd.get(mem2 + no_of_nodes), down_flit_ipd.get(src1), 0, numpy_for_dir,
                                    correlation_dir)
@@ -100,14 +103,17 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2,
             if up_flit_ipd.get(def_mem + no_of_nodes) is not None:
                 convert_to_numpy_local(up_flit_ipd.get(def_mem + no_of_nodes), down_flit_ipd.get(src2), 0,
                                        numpy_for_dir, correlation_dir)
-        elif src1 != 0 and src2 != 0 and down_flit_ipd.get(0) is not None:
-            convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(0), 0, numpy_for_dir,
-                                   correlation_dir)
+        # elif src1 != 0 and src2 != 0 and down_flit_ipd.get(0) is not None:
+        #     convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(0), 0, numpy_for_dir,
+        #                            correlation_dir)
     else:
         print("skipping this combination becuase no other node flow is found")
 
 
-def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, correlation_dir):
+def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, correlation_dir, skip_first_subarray=False):
+    if skip_first_subarray:
+        up_value = up_value[MIN_MAX_LENGTH:]
+        down_value = down_value[MIN_MAX_LENGTH:]
     up_flow = np.array(up_value)
     down_flow = np.array(down_value)
     up_flow.resize(MIN_MAX_LENGTH, refcheck=False)
@@ -149,7 +155,7 @@ def process_flit_flow(link, stream, ipd, flit_count, up_flit_ipd, down_flit_ipd,
     key = "link_" + link + "_" + stream
     ipd = int(ipd)
     link = int(link)
-    if stream == "Upstream":
+    if stream == "Upstream" or stream == "New Upstream" :
         if key in flit_count:
             up_flit_ipd[link].append(ipd)
             flit_count[key] += 1
