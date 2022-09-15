@@ -91,9 +91,9 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2,
     if down_flit_ipd.get(src1) is not None and up_flit_ipd.get(mem1 + no_of_nodes) is not None:
         convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir,
                                correlation_dir)
-        if len(up_flit_ipd.get(mem1 + no_of_nodes)) > 2*MIN_MAX_LENGTH and len(down_flit_ipd.get(src1)) >  2*MIN_MAX_LENGTH:
-            convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir,
-                               correlation_dir, True)
+        # if len(up_flit_ipd.get(mem1 + no_of_nodes)) > 2*MIN_MAX_LENGTH and len(down_flit_ipd.get(src1)) >  2*MIN_MAX_LENGTH:
+        #     convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(src1), 1, numpy_for_dir,
+        #                        correlation_dir, True)
         if up_flit_ipd.get(mem2 + no_of_nodes) is not None:
             convert_to_numpy_local(up_flit_ipd.get(mem2 + no_of_nodes), down_flit_ipd.get(src1), 0, numpy_for_dir,
                                    correlation_dir)
@@ -103,9 +103,9 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, src1, mem1, src2, mem2,
             if up_flit_ipd.get(def_mem + no_of_nodes) is not None:
                 convert_to_numpy_local(up_flit_ipd.get(def_mem + no_of_nodes), down_flit_ipd.get(src2), 0,
                                        numpy_for_dir, correlation_dir)
-        # elif src1 != 0 and src2 != 0 and down_flit_ipd.get(0) is not None:
-        #     convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(0), 0, numpy_for_dir,
-        #                            correlation_dir)
+        elif src1 != 0 and src2 != 0 and down_flit_ipd.get(0) is not None:
+            convert_to_numpy_local(up_flit_ipd.get(mem1 + no_of_nodes), down_flit_ipd.get(0), 0, numpy_for_dir,
+                                   correlation_dir)
     else:
         print("skipping this combination becuase no other node flow is found")
 
