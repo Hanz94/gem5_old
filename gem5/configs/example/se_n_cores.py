@@ -66,6 +66,9 @@ from common.cpu2000 import *
 # Check if KVM support has been enabled, we might need to do VM
 # configuration if that's the case.
 have_kvm_support = 'BaseKvmCPU' in globals()
+
+m5.disableAllListeners()
+
 def is_kvm_cpu(cpu_class):
     return have_kvm_support and cpu_class != None and \
         issubclass(cpu_class, BaseKvmCPU)
