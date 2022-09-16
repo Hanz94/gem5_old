@@ -16,7 +16,7 @@ export cw=""
 export cw_flag=""
 if [[ "$apply_cf" == "-cw" ]]; then
     is_apply_cf=true 
-    cw="c"
+    cw="chl"
     cw_flag="--enable-add-chaff"
 fi
 
